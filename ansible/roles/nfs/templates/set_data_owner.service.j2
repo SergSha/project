@@ -1,0 +1,14 @@
+# /etc/systemd/system/set_data_owner.service
+
+[Unit]
+Description=oneshot systemd service to chown mysql:mysql /data
+After=data.mount
+Requires=data.mount
+
+[Service]
+Type=oneshot
+#Using -v (verbose) to produce message that can be seen in the systemd journal. This is optional.
+ExecStart=/usr/bin/chown -v mysql:mysql /data
+
+[Install]
+WantedBy=multi-user.target

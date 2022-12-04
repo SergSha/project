@@ -1,0 +1,27 @@
+---
+# tasks file for nginx
+
+- name: Install EPEL repo
+  yum:
+    name:
+      - epel-release
+    state: latest
+
+- name: Install nginx
+  yum:
+    name:
+      - nginx
+    state: latest
+
+- name: Template nginx config file
+  template:
+    src: ./conf.d/upstream.conf.j2
+    dest: /etc/nginx/conf.d/upstream.conf
+
+- name: Start nginx
+  service:
+    name: nginx
+    state: restarted
+    enabled: yes
+
+

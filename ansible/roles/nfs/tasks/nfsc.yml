@@ -1,0 +1,24 @@
+---
+# tasks file for nfs
+
+- name: Create mount mysql data folder
+  file:
+    path: /data/mysql
+    state: directory
+    mode: 0777
+
+- name: Template data.mount to SystemD
+  template: 
+    src: "{{ item }}.j2"
+    dest: "/etc/systemd/system/{{ item }}"
+    mode: 0644
+  loop:
+    - "data-mysql.mount"
+    - "set_data_owner.service"
+
+- name: Start and Enable data.mount
+#  systemd: name=data.mount state=started enabled=yes daemon_reload=yes
+  service: 
+    name: data-mysql.mount
+    state: started
+    enabled: yes

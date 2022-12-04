@@ -1,0 +1,17 @@
+---
+# tasks file for nfs
+
+- name: Install nfs server
+  yum:
+    name:
+      - nfs-utils
+    state: present
+
+- name: Include install nfs server
+  include_tasks: nfss.yml
+  when: "'data' in ansible_hostname"
+
+- name: Include install nfs client
+  include_tasks: nfsc.yml
+  when: "'web' in ansible_hostname"
+

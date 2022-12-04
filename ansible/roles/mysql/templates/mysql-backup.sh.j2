@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# /usr/local/bin/mysql-backup.sh
+
+# Create backup directory
+mysql_backup_path=/backup/mysql
+[ -d $mysql_backup_path ] || mkdir -p $mysql_backup_path 2>&1
+
+# Clear old backup
+[ -e $mysql_backup_path/* ] && rm -f $(find $mysql_backup_path/* -ctime +31) 2>&1
+
+# Create all databases backup
+/usr/bin/mysqldump --all-databases --set-gtid-purged=OFF --triggers --routines | gzip > db_$(date "+%Y-%m-%d_%H-%M-%S").sql.gz
+
+# Create database backups
+mysql_backup_dir=$mysql_backup_path/db_$(date "+%Y-%m-%d_%H-%M-%S")
+[ -d $mysql_backup_dir ] || mkdir -p $mysql_backup_dir 2>&1
+for dbname in $(/usr/bin/mysql -e "SHOW DATABASES;" | egrep -v 'Database|information_schema|mysql|performance_schema|sys|test'); do
+    [ -d $mysql_backup_dir ] || mkdir -p $mysql_backup_dir 2>&1
+    /usr/bin/mysqldump --set-gtid-purged=OFF --triggers --routines $dbname | gzip > $mysql_backup_dir/$dbname.sql.gz
+done
+
+# Create database backups by tables
+mysql_backup_dir=$mysql_backup_path/db_$(date "+%Y-%m-%d_%H-%M-%S")
+[ -d $mysql_backup_dir ] || mkdir -p $mysql_backup_dir 2>&1
+for dbname in $(/usr/bin/mysql -e "SHOW DATABASES;" | egrep -v 'Database|information_schema|mysql|performance_schema|sys|test'); do
+    [ -d $mysql_backup_dir/$dbname ] || mkdir -p $mysql_backup_dir/$dbname 2>&1
+    for tbname in $(/usr/bin/mysql -e "SHOW TABLES FROM $dbname;" | tail -n +2); do
+        /usr/bin/mysqldump --set-gtid-purged=OFF --triggers --routines $dbname $tbname | gzip > $mysql_backup_dir/$dbname/$tbname.sql.gz
+    done
+done

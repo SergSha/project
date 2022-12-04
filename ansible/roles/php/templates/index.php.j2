@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>LIST CARS</title>
+<meta charset="utf-8" />
+</head>
+<body>
+
+<h2>LIST CARS</h2>
+
+<p><i>PDO connect:</i></p>
+<?php
+try {
+    $conn = new PDO("mysql:host=192.168.1.1;dbname=cars", "{{ mysql_php_user }}", "{{ mysql_php_password }}");
+    $sql = "SELECT * FROM new_cars";
+    $result = $conn->query($sql);
+    echo "<h3>List new cars</h3>";
+    echo "<table><tr><th>Id</th><th>Name</th><th>Year</th><th>Price</th></tr>";
+    while($row = $result->fetch()){
+        echo "<tr>";
+            echo "<td>" . $row["id"] . "</td>";
+            echo "<td>" . $row["name"] . "</td>";
+            echo "<td>" . $row["year"] . "</td>";
+            echo "<td>" . $row["price"] . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+
+    $sql = "SELECT * FROM used_cars";
+    $result = $conn->query($sql);
+    echo "<h3>List used cars</h3>";
+    echo "<table><tr><th>Id</th><th>Name</th><th>Year</th><th>Price</th></tr>";
+    while($row = $result->fetch()){
+        echo "<tr>";
+            echo "<td>" . $row["id"] . "</td>";
+            echo "<td>" . $row["name"] . "</td>";
+            echo "<td>" . $row["year"] . "</td>";
+            echo "<td>" . $row["price"] . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+}
+catch (PDOException $e) {
+    echo "Database error: " . $e->getMessage();
+}
+?>
+
+<hr />
+
+<p><i>mysqli - OOP style:</i></p>
+<?php
+$conn = new mysqli("192.168.1.1", "{{ mysql_php_user }}", "{{ mysql_php_password }}", "cars");
+if($conn->connect_error){
+    die("Errors: " . $conn->connect_error);
+}
+$sql = "SELECT * FROM new_cars";
+if($result = $conn->query($sql)){
+    $rowsCount = $result->num_rows; // Get count rows
+    echo "<h3>List new cars</h3>";
+    //echo "<p>Get objects: $rowsCount</p>";
+    echo "<table><tr><th>Id</th><th>Name</th><th>Year</th><th>Price</th></tr>";
+    foreach($result as $row){
+        echo "<tr>";
+            echo "<td>" . $row["id"] . "</td>";
+            echo "<td>" . $row["name"] . "</td>";
+            echo "<td>" . $row["year"] . "</td>";
+            echo "<td>" . $row["price"] . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+    $result->free();
+} else{
+    echo "Got objects: " . $conn->error;
+}
+
+$sql = "SELECT * FROM used_cars";
+if($result = $conn->query($sql)){
+    $rowsCount = $result->num_rows; // Get count rows
+    echo "<h3>List used cars</h3>";
+    //echo "<p>Get objects: $rowsCount</p>";
+    echo "<table><tr><th>Id</th><th>Name</th><th>Year</th><th>Price</th></tr>";
+    foreach($result as $row){
+        echo "<tr>";
+            echo "<td>" . $row["id"] . "</td>";
+            echo "<td>" . $row["name"] . "</td>";
+            echo "<td>" . $row["year"] . "</td>";
+            echo "<td>" . $row["price"] . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+    $result->free();
+} else{
+    echo "Got objects: " . $conn->error;
+}
+
+$conn->close();
+?>
+
+<hr />
+
+<p><i>mysqli - procedural style:</i></p>
+<?php
+$conn = mysqli_connect("192.168.1.1", "{{ mysql_php_user }}", "{{ mysql_php_password }}", "cars");
+if (!$conn) {
+  die("Error: " . mysqli_connect_error());
+}
+$sql = "SELECT * FROM new_cars";
+if($result = mysqli_query($conn, $sql)){
+    $rowsCount = mysqli_num_rows($result); // Get count rows
+    echo "<h3>List new cars</h3>";
+    //echo "<p>Get objects: $rowsCount</p>";
+    echo "<table><tr><th>Id</th><th>Name</th><th>Year</th><th>Price</th></tr>";
+    foreach($result as $row){
+        echo "<tr>";
+            echo "<td>" . $row["id"] . "</td>";
+            echo "<td>" . $row["name"] . "</td>";
+            echo "<td>" . $row["year"] . "</td>";
+            echo "<td>" . $row["price"] . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+    mysqli_free_result($result);
+} else{
+    echo "Error: " . mysqli_error($conn);
+}
+
+$sql = "SELECT * FROM used_cars";
+if($result = mysqli_query($conn, $sql)){
+    $rowsCount = mysqli_num_rows($result); // Get count rows
+    echo "<h3>List used cars</h3>";
+    //echo "<p>Get objects: $rowsCount</p>";
+    echo "<table><tr><th>Id</th><th>Name</th><th>Year</th><th>Price</th></tr>";
+    foreach($result as $row){
+        echo "<tr>";
+            echo "<td>" . $row["id"] . "</td>";
+            echo "<td>" . $row["name"] . "</td>";
+            echo "<td>" . $row["year"] . "</td>";
+            echo "<td>" . $row["price"] . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+    mysqli_free_result($result);
+} else{
+    echo "Error: " . mysqli_error($conn);
+}
+
+mysqli_close($conn);
+?>
+
+</body>
+</html>

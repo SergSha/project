@@ -2,86 +2,63 @@
 # vi: set ft=ruby :
 
 MACHINES = {
-  :inetRouter => {
+  :fw => {
     :box_name => "centos/7",
-    :vm_name => "inetRouter",
+    :vm_name => "fw",
     #:public => {:ip => '10.10.10.1', :adapter => 1},
     :net => [
-      {ip: '192.168.255.1', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "router-net"},
-      {ip: '192.168.50.10', adapter: 8},
+      {ip: '192.168.255.2', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "web-net"},
+      {ip: '192.168.0.1', adapter: 7, netmask: "255.255.255.0", virtualbox__intnet: "log-net"},
+      {ip: '192.168.200.11', adapter: 8},
     ]
   },
-  :centralRouter => {
+  :web => {
     :box_name => "centos/7",
-    :vm_name => "centralRouter",
+    :vm_name => "web",
     :net => [
-      {ip: '192.168.255.2', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "router-net"},
-      {ip: '192.168.0.1', adapter: 3, netmask: "255.255.255.240", virtualbox__intnet: "dir-net"},
-      {ip: '192.168.0.33', adapter: 4, netmask: "255.255.255.240", virtualbox__intnet: "hw-net"},
-      {ip: '192.168.0.65', adapter: 5, netmask: "255.255.255.192", virtualbox__intnet: "mgt-net"},
-      {ip: '192.168.255.9', adapter: 6, netmask: "255.255.255.252", virtualbox__intnet: "office1-central"},
-      {ip: '192.168.255.5', adapter: 7, netmask: "255.255.255.252", virtualbox__intnet: "office2-central"},
-      {ip: '192.168.50.11', adapter: 8},
+      {ip: '192.168.255.1', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "web-net"},
+      {ip: '192.168.1.2', adapter: 3, netmask: "255.255.255.0", virtualbox__intnet: "data-net"},
+      {ip: '192.168.0.2', adapter: 7, netmask: "255.255.255.0", virtualbox__intnet: "log-net"},
+      {ip: '192.168.200.12', adapter: 8},
     ]
   },
-  :centralServer => {
+  :data => {
     :box_name => "centos/7",
-    :vm_name => "centralServer",
+    :vm_name => "data",
     :net => [
-      {ip: '192.168.0.2', adapter: 2, netmask: "255.255.255.240", virtualbox__intnet: "dir-net"},
-      #{adapter: 3, auto_config: false, virtualbox__intnet: true},
-      #{adapter: 4, auto_config: false, virtualbox__intnet: true},
-      {ip: '192.168.50.12', adapter: 8},
+      {ip: '192.168.1.1', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "data-net"},
+      {ip: '192.168.2.2', adapter: 3, netmask: "255.255.255.0", virtualbox__intnet: "replica-net"},
+      {ip: '192.168.0.3', adapter: 7, netmask: "255.255.255.0", virtualbox__intnet: "log-net"},
+      {ip: '192.168.200.13', adapter: 8},
     ]
   },
-  :inetRouter2 => {
+  :replica => {
     :box_name => "centos/7",
-    :vm_name => "inetRouter2",
-    #:public => {:ip => '10.10.10.1', :adapter => 1},
+    :vm_name => "replica",
     :net => [
-      {ip: '192.168.0.34', adapter: 2, netmask: "255.255.255.248", virtualbox__intnet: "hw-net"},
-      {ip: '192.168.50.13', adapter: 8},
+      {ip: '192.168.2.1', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "replica-net"},
+      {ip: '192.168.3.2', adapter: 3, netmask: "255.255.255.0", virtualbox__intnet: "backup-net"},
+      {ip: '192.168.0.4', adapter: 7, netmask: "255.255.255.0", virtualbox__intnet: "log-net"},
+      {ip: '192.168.200.14', adapter: 8},
     ]
   },
-  :office1Router => {
-    :box_name => "ubuntu/focal64",
-    :vm_name => "office1Router",
+  :backup => {
+    :box_name => "centos/7",
+    :vm_name => "backup",
     :net => [
-      {ip: '192.168.255.10', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "office1-central"},
-      {ip: '192.168.2.1', adapter: 3, netmask: "255.255.255.192", virtualbox__intnet: "dev1-net"},
-      {ip: '192.168.2.65', adapter: 4, netmask: "255.255.255.192", virtualbox__intnet: "test1-net"},
-      {ip: '192.168.2.129', adapter: 5, netmask: "255.255.255.192", virtualbox__intnet: "managers-net"},
-      {ip: '192.168.2.193', adapter: 6, netmask: "255.255.255.192", virtualbox__intnet: "office1-net"},
-      {ip: '192.168.50.20', adapter: 8},
+      {ip: '192.168.3.1', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "backup-net"},
+      {ip: '192.168.0.5', adapter: 7, netmask: "255.255.255.0", virtualbox__intnet: "log-net"},
+      {ip: '192.168.200.15', adapter: 8},
     ]
   },
-  :office1Server => {
-    :box_name => "ubuntu/focal64",
-    :vm_name => "office1Server",
+  :logger => {
+    :box_name => "centos/7",
+    :vm_name => "logger",
     :net => [
-      {ip: '192.168.2.130', adapter: 2, netmask: "255.255.255.192", virtualbox__intnet: "managers-net"},
-      {ip: '192.168.50.21', adapter: 8},
+      {ip: '192.168.0.6', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "log-net"},
+      {ip: '192.168.200.16', adapter: 8},
     ]
-  },
-  :office2Router => {
-    :box_name => "debian/bullseye64",
-    :vm_name => "office2Router",
-    :net => [
-      {ip: '192.168.255.6', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "office2-central"},
-      {ip: '192.168.1.1', adapter: 3, netmask: "255.255.255.128", virtualbox__intnet: "dev2-net"},
-      {ip: '192.168.1.129', adapter: 4, netmask: "255.255.255.192", virtualbox__intnet: "test2-net"},
-      {ip: '192.168.1.193', adapter: 5, netmask: "255.255.255.192", virtualbox__intnet: "office2-net"},
-      {ip: '192.168.50.30', adapter: 8},
-    ]
-  },
-  :office2Server => {
-    :box_name => "debian/bullseye64",
-    :vm_name => "office2Server",
-    :net => [
-      {ip: '192.168.1.2', adapter: 2, netmask: "255.255.255.128", virtualbox__intnet: "dev2-net"},
-      {ip: '192.168.50.31', adapter: 8},
-    ]
-  },
+  }
 }
 Vagrant.configure("2") do |config|
   MACHINES.each do |boxname, boxconfig|
@@ -101,7 +78,7 @@ Vagrant.configure("2") do |config|
 #        systemctl restart sshd
       SHELL
 #      case boxname.to_s
-#      when "inetRouter"
+#      when "fw"
 #        box.vm.provision "shell", run: "always", inline: <<-SHELL
 #          sysctl net.ipv4.conf.all.forwarding=1
 #          iptables -t nat -A POSTROUTING ! -d 192.168.0.0/16 -o eth0 -j MASQUERADE

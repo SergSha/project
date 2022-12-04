@@ -1,12 +1,9 @@
 [routers]
-inetRouter ansible_host=192.168.50.10 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/inetRouter/virtualbox/private_key
-centralRouter ansible_host=192.168.50.11 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/centralRouter/virtualbox/private_key
-inetRouter2 ansible_host=192.168.50.13 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/inetRouter2/virtualbox/private_key
-office1Router ansible_host=192.168.50.20 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/office1Router/virtualbox/private_key
-office2Router ansible_host=192.168.50.30 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/office2Router/virtualbox/private_key
 
 [servers]
-centralServer ansible_host=192.168.50.12 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/centralServer/virtualbox/private_key
-office1Server ansible_host=192.168.50.21 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/office1Server/virtualbox/private_key
-office2Server ansible_host=192.168.50.31 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/office2Server/virtualbox/private_key
-
+fw ansible_host=192.168.200.11 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/fw/virtualbox/private_key
+web ansible_host=192.168.200.12 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/web/virtualbox/private_key
+data ansible_host=192.168.200.13 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/data/virtualbox/private_key
+replica ansible_host=192.168.200.14 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/replica/virtualbox/private_key
+backup ansible_host=192.168.200.15 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/backup/virtualbox/private_key
+logger ansible_host=192.168.200.16 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/logger/virtualbox/private_key

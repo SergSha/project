@@ -1,0 +1,12 @@
+# /etc/systemd/system/mysql-backup.timer
+
+[Unit]
+Description=MySQL Backup
+Requires=mysql-backup.service
+
+[Timer]
+#Unit==mysql-backup.service
+OnUnitActiveSec=5min
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,43 @@
+---
+# tasks file for mysql
+
+- name: data | Create mysql user '{{ mysql_repl_user }}' for replication
+  command: mysql -e "CREATE USER '{{ mysql_repl_user }}'@'%' IDENTIFIED WITH mysql_native_password BY '{{ mysql_repl_password }}';"
+
+- name: data | Grant replication slave for mysql user '{{ mysql_repl_user }}'
+  command: mysql -e "GRANT REPLICATION SLAVE ON *.* TO '{{ mysql_repl_user }}'@'%';"
+  ignore_errors: yes
+
+- name: data | Create mysql user '{{ mysql_backup_user }}' for backup
+  command: mysql -e "CREATE USER '{{ mysql_backup_user }}'@'localhost' IDENTIFIED BY '{{ mysql_backup_password }}';"
+
+- name: data | Grant backup for mysql user '{{ mysql_backup_user }}'
+  command: mysql -e "GRANT SELECT, SHOW VIEW, RELOAD, REPLICATION CLIENT, EVENT, TRIGGER, LOCK TABLES, PROCESS, EXECUTE ON *.* TO {{ mysql_backup_user }}@'localhost';"
+  ignore_errors: yes
+
+- name: data | Create mysql user '{{ mysql_php_user }}' for php site admin
+  command: mysql -e "CREATE USER '{{ mysql_php_user }}'@'%' IDENTIFIED BY '{{ mysql_php_password }}';"
+
+- name: data | Grant php site admin for mysql user '{{ mysql_php_user }}'
+  command: mysql -e "GRANT ALL PRIVILEGES ON *.* TO '{{ mysql_php_user }}'@'%';" # GRANT ALL PRIVILEGES ON *.* TO 'phpadmin'@'%' WITH GRANT OPTION;
+  ignore_errors: yes
+
+#- name: data | Flush privileges (for MySQL early v. 5.7)
+#  command: mysql -e "FLUSH PRIVILEGES;"
+#  ignore_errors: yes
+
+- name: data | Export temp mysql dump 'master.sql' for replica server
+  shell: mysqldump --all-databases --triggers --routines --master-data > /root/master.sql
+  ignore_errors: yes
+
+- name: data | Fetch mysql dump 'master.sql' to /tmp/fetched for replica server
+  fetch:
+    src: "/root/{{ item }}"
+    dest: /tmp/fetched
+  loop:
+    - "master.sql"
+
+- name: data | Delete temp mysql dump 'master.sql'
+  file:
+    path: /root/master.sql
+    state: absent

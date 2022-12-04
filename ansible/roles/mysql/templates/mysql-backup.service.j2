@@ -1,0 +1,15 @@
+# /etc/systemd/system/mysql-backup.service
+
+[Unit]
+Description=MySQL Backup
+
+[Service]
+Type=oneshot
+
+# Create backup
+ExecStart=/usr/local/bin/mysql-backup.sh
+
+# Log to mysql-backup.log
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=mysql-backup

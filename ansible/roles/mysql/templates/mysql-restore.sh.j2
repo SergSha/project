@@ -1,0 +1,13 @@
+#!/bin/bash
+# /usr/local/bin/mysql-restore.sh
+
+mysql -e "SOURCE $1"
+
+dbs=$(ls $1 | cut -d '.' -f 1 | grep -v user)
+
+for dbname in $dbs; do
+    mysql -e "CREATE DATABASE $dbname;"
+    zcat $1/$dbname.sql.gz | mysql $dbname
+done
+
+# zcat $1/user.sql.gz | mysql mysql

@@ -1,0 +1,31 @@
+---
+# tasks file for mysql
+
+- name: replica | Copy mysql dump 'master.sql' from /tmp/fetched to replica server
+  copy:
+    src: "/tmp/fetched/data/root/{{ item }}"
+    dest: /root/
+  loop:
+  - "master.sql"
+
+- name: replica | Master reset
+  command: mysql -e "RESET MASTER;"
+  ignore_errors: yes
+
+- name: replica | Import mysql dump 'master.sql'
+  command: mysql -e "SOURCE /root/master.sql;"
+  ignore_errors: yes
+
+- name: replica | Connect mysql to master server
+  command: mysql -e 'CHANGE MASTER TO MASTER_HOST="{{ data_ip }}", MASTER_PORT={{ mysql_port }}, MASTER_USER="{{ mysql_repl_user }}", MASTER_PASSWORD="{{ mysql_repl_password }}", MASTER_AUTO_POSITION=1;'
+  ignore_errors: yes
+
+- name: replica | Start slave
+  command: mysql -e "START SLAVE;"
+  ignore_errors: yes
+
+- name: replica | Delete temp mysql dump 'master.sql'
+  file:
+    path: /root/master.sql
+    state: absent
+

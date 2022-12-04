@@ -1,0 +1,27 @@
+---
+# tasks file for nfs
+
+- name: start nfs server
+  service:
+    name: nfs
+    state: restarted
+    enabled: yes
+
+#- name: Create mysql data folder
+#  file:
+#    path: /data
+#    state: directory
+#    recurse: yes
+#    owner: nfsnobody
+#    group: nfsnobody
+#    mode: 0777
+
+- name: Add exports config file
+  lineinfile:
+    path: /etc/exports
+    line: /var/lib/mysql 192.168.1.2(rw,sync,root_squash)
+    create: yes
+
+- name: nfs share 
+  command: /usr/sbin/exportfs -r
+  ignore_errors: yes

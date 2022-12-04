@@ -1,7 +1,165 @@
 ---
-- name: Iptables | Install and Configure
+
+- name: All hosts | base configure
   hosts: all
   become: true
+  tasks:
+  - name: Put SELinux in permissive mode, logging actions that would be blocked
+    selinux:
+      policy: targeted
+      state: permissive
 
+- name: Install nginx
+  hosts: fw
+  become: true
   roles:
-    - { role: iptables, when: ansible_system == 'Linux' }
+    - { role: nginx, when: ansible_system == 'Linux' }
+
+- name: Install php
+  hosts: web
+  become: true
+  roles:
+    - { role: php, when: ansible_system == 'Linux' }
+
+- name: Install mysql
+  hosts: data replica backup
+  become: true
+  roles:
+    - { role: mysql, when: ansible_system == 'Linux' }
+
+#- name: Install nfs
+#  hosts: web data
+#  become: true
+#  roles:
+#    - { role: nfs, when: ansible_system == 'Linux' }
+
+#- name: Install wordpress
+#  hosts: web
+#  become: true
+#  roles:
+#    - { role: wordpress, when: ansible_system == 'Linux' }
+
+
+
+
+#- name: Установка Nginx
+#  hosts: frontend_server
+#  roles:
+#  - frontend
+
+#- name: Установка PostgreSQL
+#  hosts: postgresql
+#  roles:
+#  - postresql
+
+#- name: Установка Django и Gunicorn
+#  hosts: backend_server
+#  roles:
+#  - backend
+
+
+
+
+#- hosts: all_all
+#  become: yes
+#  gather_facts: no
+#  tasks:
+#  - name: Install common utils
+#    yum:
+#      name: ['epel-release','git','lsof','tcpdump','policycoreutils','wget','unzip','telnet']
+#      state: present
+#  - name: setup locale
+#    copy:
+#      src: locale.conf
+#      dest: /etc/locale.conf
+#      owner: root
+#      group: root
+#      mode: 0644
+#  - name: sysctl config for 10G networks
+#    sysctl:
+#      name: "{{ item.name }}"
+#      value: "{{ item.value }}"
+#      sysctl_set: yes
+#      state: present
+#      reload: yes
+#    with_items:
+      # - { name: net.ipv4.tcp_window_scaling, value: 1 }
+      # - { name: net.core.rmem_max, value: 1677721600 }
+      # - { name: net.core.rmem_default, value: 167772160 }
+      # - { name: net.core.wmem_max, value: 1677721600 }
+      # - { name: net.core.wmem_default, value: 167772160 }
+      # - { name: net.core.optmem_max, value: 2048000 }
+      # - { name: net.ipv4.tcp_rmem, value: 1024000 8738000 1677721600 }
+      # - { name: net.ipv4.tcp_wmem, value: 1024000 8738000 1677721600 }
+      # - { name: net.ipv4.tcp_mem, value: 1024000 8738000 1677721600 }
+      # - { name: net.ipv4.udp_mem, value: 1024000 8738000 1677721600 }
+      # - { name: net.core.netdev_max_backlog, value: 30000 }
+      # - { name: net.ipv4.tcp_no_metrics_save, value: 1 }
+#   - name: setup locale
+#     copy:
+#       src: environment
+#       dest: /etc/environment
+#       owner: root
+#       group: root
+#       mode: 0644
+#   - name: say Network Manager do NOT touch resolv.conf
+#     copy:
+#       src: roles/dns/files/NetworkManager.conf
+#       dest: /etc/NetworkManager/NetworkManager.conf
+#       owner: root
+#       group: root
+#       mode: 0644
+#   - name: reload config NetworkManager
+#     service:
+#       name: NetworkManager
+#       daemon_reload: yes
+# - hosts: ns
+#   become: yes
+#   gather_facts: no
+#   roles:
+#     - { role: dns }
+#     - { role: ntp }
+#     - { role: lizard-client }
+#     - { role: autofs }
+#     - { role: etcd }
+#     - { role: haproxy }
+#     - { role: prometheus }
+#     - { role: netdata-central }
+#     - { role: grafana }
+#     - { role: nginx }
+#     - { role: audit-server }
+#     - { role: kerberos }
+#     - { role: pgbackrest }
+# - hosts: master01,master02,master03,node01,node02,node03
+#   become: yes
+#   gather_facts: no
+#   tasks:
+#   - name: copy resolv.conf to client
+#     copy:
+#       src: roles/dns/files/resolv.conf
+#       dest: /etc/resolv.conf
+#       owner: root
+#       group: root
+#       mode: 0644
+# - hosts: master01,master02,master03
+#   become: yes
+#   gather_facts: no
+#   roles:
+#     - { role: ntp-client }
+#     - { role: audit-client }
+#     - { role: lizard-master }
+#     - { role: pgsql11 }
+#     - { role: timescaledb }
+#     - { role: patroni }
+#     - { role: netdata-client }
+#     - { role: kerberos-client }
+# - hosts: node01,node02,node03
+#   become: yes
+#   gather_facts: no
+#   roles:
+#     - { role: ntp-client }
+#     - { role: audit-client }
+#     - { role: lvm2 }
+#     - { role: lizard-node }
+#     - { role: netdata-client }
+#     - { role: kerberos-client }

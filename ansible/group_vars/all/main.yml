@@ -1,0 +1,7 @@
+---
+# group vars
+
+mysql_php_user: phpadmin
+mysql_php_password: 'phpadmin@Otus1234'
+
+
