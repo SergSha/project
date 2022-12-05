@@ -1,0 +1,78 @@
+use mysql;
+
+CREATE USER 'phpadmin'@'%' IDENTIFIED BY 'Otus@1234';
+CREATE USER phpadmin@'%' IDENTIFIED WITH 'mysql_native_password' BY 'Otus@1234';
+CREATE USER repl@'%' IDENTIFIED WITH 'caching_sha2_password' BY 'Tn!91@Uk#57';
+
+GRANT ALL PRIVILEGES ON *.* TO 'phpadmin'@'%' WITH GRANT OPTION;
+GRANT REPLICATION SLAVE ON *.* TO repl@'%';
+
+FLUSH PRIVILEGES;
+
+CREATE DATABASE cars;
+CREATE TABLE cars.new_cars(id INT NOT NULL AUTO_INCREMENT, name VARCHAR(20), year YEAR, price INT, PRIMARY KEY(id));
+CREATE TABLE cars.used_cars (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(20), year YEAR, price INT, PRIMARY KEY(id));
+INSERT INTO cars.new_cars(name,year,price) VALUES("Lada",2022,1000000);
+INSERT INTO cars.used_cars (name, year, price) VALUES ("Toyota", 2021, 2000000), ("Nissan", 2020, 1800000);
+
+INSERT INTO cars.new_cars (name, year, price) VALUES ("Renault", 2021, 1900000), ("Ford", 2022, 2800000);
+
+INSERT INTO cars.new_cars (name, year, price) VALUES ("Volga", 2022, 1600000), ("Volvo", 2022, 4800000);
+
+mysql -e "GRANT SELECT, SHOW VIEW, RELOAD, REPLICATION CLIENT, EVENT, TRIGGER, LOCK TABLES, PROCESS, EXECUTE ON *.* TO backup@localhost IDENTIFIED WITH 'mysql_native_password' BY 'backup@Otus1234';"
+
+
+
+A partial dump from a server that has GTIDs will by default include the GTIDs of all transactions, even those that changed suppressed parts of the database. If you don't want to restore GTIDs, pass --set-gtid-purged=OFF. To make a complete dump, pass --all-databases --triggers --routines --events.
+
+================================================================
+
+#!/bin/bash
+# /usr/local/bin/mysql-backup.sh
+
+path=/backup/mysql
+path_backup=$path/dbs_$(date "+%Y-%m-%d_%H-%M-%S")
+[ -d $path_backup ] || mkdir -p $path_backup 2>&1
+
+# Clear old backup
+rm -rf $(find $path/* -type d -ctime +31) 2>&1
+
+#for dbname in $(/usr/bin/mysql -e "SHOW DATABASES" | grep -v Database); do
+#    case $dbname in
+#        information_schema)
+#            continue ;;
+#        mysql)
+#            continue ;;
+#        performance_schema)
+#            continue ;;
+#        test)
+#            continue ;;
+#        sys)
+#            continue ;;
+#        *) /usr/bin/mysqldump --all-databases --triggers --routines --events $dbname | gzip > $path_backup/$dbname.sql.gz ;;
+#    esac
+#done
+
+/usr/bin/mysqldump --all-databases --triggers --routines --events $dbname | gzip > $path_backup/databases.sql.gz
+
+# mysqldump --all-databases --single-transaction --triggers --routines --host=127.0.0.1 --port=18675 --user=msandbox --password=msandbox > dump.sql
+
+# Create backup of users
+mysqldump --all-databases --triggers --routines --events mysql user  | gzip > $path_backup/user.sql.gz
+
+========================================================
+
+#!/bin/bash
+# /usr/local/bin/mysql-restore.sh
+
+dbs=$(ls $1 | cut -d '.' -f 1 | grep -v user)
+
+for dbname in $dbs; do
+    mysql -e "CREATE DATABASE $dbname;"
+    zcat $1/$dbname.sql.gz | mysql $dbname
+done
+
+zcat $1/user.sql.gz | mysql mysql
+~                                 
+mysqldump -ubackup --all-databases --set-gtid-purged=OFF --triggers --routines > dbmaster.sql
+

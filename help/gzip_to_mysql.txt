@@ -1,0 +1,4 @@
+Заливаем архив бекапа в базу
+gunzip < /path/to/outputfile.sql.gz | mysql -u USER -pPASSWORD DATABASE
+или так
+zcat /path/to/outputfile.sql.gz | mysql -u USER -pPASSWORD DATABASE

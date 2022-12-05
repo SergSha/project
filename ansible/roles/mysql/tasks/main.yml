@@ -1,7 +1,7 @@
 ---
 # tasks file for mysql
 
-- name: Create mount mysql data folder
+- name: Create share mysql data folder
   file:
     path: /data
     state: directory
@@ -48,6 +48,7 @@
   service:
     name: mysql
     state: restarted
+    enabled: yes
 
 - name: Get temporary mysql root password
   shell: cat /var/log/mysqld.log | grep 'root@localhost:' | awk '{print $11}'
@@ -68,3 +69,9 @@
 - name: Include backup server tasks
   include_tasks: backup.yml
   when: '"backup" in ansible_hostname'
+
+- name: Delete share mysql data folder
+  file:
+    path: /data
+    state: absent
+

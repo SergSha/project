@@ -1,19 +1,16 @@
 ---
 # tasks file for mysql
 
-- name: replica | Copy mysql dump 'master.sql' from /tmp/fetched to replica server
-  copy:
-    src: "/tmp/fetched/data/root/{{ item }}"
-    dest: /root/
-  loop:
-  - "master.sql"
+- name: replica | Export temp mysql dump 'master.sql' for {{ ansible_hostname }} server
+  shell: mysqldump -h {{ data_ip }} --all-databases --triggers --routines --master-data > /data/master.sql
+  ignore_errors: yes
 
 - name: replica | Master reset
   command: mysql -e "RESET MASTER;"
   ignore_errors: yes
 
 - name: replica | Import mysql dump 'master.sql'
-  command: mysql -e "SOURCE /root/master.sql;"
+  command: mysql -e "SOURCE /data/master.sql;"
   ignore_errors: yes
 
 - name: replica | Connect mysql to master server
@@ -24,8 +21,21 @@
   command: mysql -e "START SLAVE;"
   ignore_errors: yes
 
+- name: replica | Add config line 'read_only'
+  blockinfile:
+    path: /etc/my.cnf.d/01-base.cnf
+    block: |
+      read_only = on
+      super_read_only = on
+
+- name: replica | Restart MySQL service
+  service:
+    name: mysql
+    state: restarted
+
 - name: replica | Delete temp mysql dump 'master.sql'
   file:
-    path: /root/master.sql
+    path: /data/master.sql
     state: absent
+
 

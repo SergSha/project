@@ -1,16 +1,2 @@
 ---
 # defaults file for mysql
-
-data_ip: 192.168.2.2
-replica_repl_ip: 192.168.2.1
-replica_backup_ip: 192.168.3.2
-backup_ip: 192.168.3.1
-mysql_root_user: root
-mysql_root_password: 'root@Otus1234'
-mysql_repl_user: repl
-mysql_repl_password: 'repl@Otus1234'
-mysql_backup_user: backup
-mysql_backup_password: 'backup@Otus1234'
-mysql_php_user: phpadmin
-mysql_php_password: 'phpadmin@Otus1234'
-mysql_port: 3306

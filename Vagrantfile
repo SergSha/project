@@ -7,8 +7,7 @@ MACHINES = {
     :vm_name => "fw",
     #:public => {:ip => '10.10.10.1', :adapter => 1},
     :net => [
-      {ip: '192.168.255.2', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "web-net"},
-      {ip: '192.168.0.1', adapter: 7, netmask: "255.255.255.0", virtualbox__intnet: "log-net"},
+      {ip: '192.168.1.11', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "privnet"},
       {ip: '192.168.200.11', adapter: 8},
     ]
   },
@@ -16,9 +15,7 @@ MACHINES = {
     :box_name => "centos/7",
     :vm_name => "web",
     :net => [
-      {ip: '192.168.255.1', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "web-net"},
-      {ip: '192.168.1.2', adapter: 3, netmask: "255.255.255.0", virtualbox__intnet: "data-net"},
-      {ip: '192.168.0.2', adapter: 7, netmask: "255.255.255.0", virtualbox__intnet: "log-net"},
+      {ip: '192.168.1.12', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "privnet"},
       {ip: '192.168.200.12', adapter: 8},
     ]
   },
@@ -26,9 +23,7 @@ MACHINES = {
     :box_name => "centos/7",
     :vm_name => "data",
     :net => [
-      {ip: '192.168.1.1', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "data-net"},
-      {ip: '192.168.2.2', adapter: 3, netmask: "255.255.255.0", virtualbox__intnet: "replica-net"},
-      {ip: '192.168.0.3', adapter: 7, netmask: "255.255.255.0", virtualbox__intnet: "log-net"},
+      {ip: '192.168.1.13', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "privnet"},
       {ip: '192.168.200.13', adapter: 8},
     ]
   },
@@ -36,9 +31,7 @@ MACHINES = {
     :box_name => "centos/7",
     :vm_name => "replica",
     :net => [
-      {ip: '192.168.2.1', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "replica-net"},
-      {ip: '192.168.3.2', adapter: 3, netmask: "255.255.255.0", virtualbox__intnet: "backup-net"},
-      {ip: '192.168.0.4', adapter: 7, netmask: "255.255.255.0", virtualbox__intnet: "log-net"},
+      {ip: '192.168.1.14', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "privnet"},
       {ip: '192.168.200.14', adapter: 8},
     ]
   },
@@ -46,19 +39,18 @@ MACHINES = {
     :box_name => "centos/7",
     :vm_name => "backup",
     :net => [
-      {ip: '192.168.3.1', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "backup-net"},
-      {ip: '192.168.0.5', adapter: 7, netmask: "255.255.255.0", virtualbox__intnet: "log-net"},
+      {ip: '192.168.1.15', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "privnet"},
       {ip: '192.168.200.15', adapter: 8},
     ]
-  },
-  :logger => {
-    :box_name => "centos/7",
-    :vm_name => "logger",
-    :net => [
-      {ip: '192.168.0.6', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "log-net"},
-      {ip: '192.168.200.16', adapter: 8},
-    ]
-  }
+  }#,
+#  :logger => {
+#    :box_name => "centos/7",
+#    :vm_name => "logger",
+#    :net => [
+#      {ip: '192.168.1.16', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "privnet"},
+#      {ip: '192.168.200.16', adapter: 8},
+#    ]
+#  }
 }
 Vagrant.configure("2") do |config|
   MACHINES.each do |boxname, boxconfig|
@@ -97,7 +89,7 @@ Vagrant.configure("2") do |config|
 #          systemctl restart network
 #        SHELL
 #      end
-      if boxconfig[:vm_name] == "office2Server"
+      if boxconfig[:vm_name] == "backup"
         box.vm.provision "ansible" do |ansible|
           ansible.playbook = "ansible/playbook.yml"
           ansible.inventory_path = "ansible/hosts"
@@ -108,4 +100,3 @@ Vagrant.configure("2") do |config|
     end
   end
 end
-

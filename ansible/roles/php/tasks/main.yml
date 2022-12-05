@@ -42,8 +42,8 @@
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"
   loop:
-    - { regexp: '^listen = ', line: 'listen = 192.168.255.1:9000' }
-    - { regexp: '^listen.allowed_clients = ', line: 'listen.allowed_clients = 192.168.255.2' }
+    - { regexp: '^listen = ', line: 'listen = {{ web_ip }}:9000' }
+    - { regexp: '^listen.allowed_clients = ', line: 'listen.allowed_clients = {{ fw_ip }}' }
 
 - name: Template php file
   template:

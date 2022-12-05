@@ -1,9 +1,13 @@
 [routers]
-
-[servers]
 fw ansible_host=192.168.200.11 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/fw/virtualbox/private_key
+
+[webs]
 web ansible_host=192.168.200.12 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/web/virtualbox/private_key
+
+[mysql]
 data ansible_host=192.168.200.13 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/data/virtualbox/private_key
 replica ansible_host=192.168.200.14 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/replica/virtualbox/private_key
 backup ansible_host=192.168.200.15 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/backup/virtualbox/private_key
+
+[loggers]
 logger ansible_host=192.168.200.16 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/logger/virtualbox/private_key

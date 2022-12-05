@@ -1,7 +1,9 @@
 ---
 # group vars
 
-mysql_php_user: phpadmin
-mysql_php_password: 'phpadmin@Otus1234'
-
-
+fw_ip: 192.168.1.11
+web_ip: 192.168.1.12
+data_ip: 192.168.1.13
+replica_ip: 192.168.1.14
+backup_ip: 192.168.1.15
+logger_ip: 192.168.1.16
