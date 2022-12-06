@@ -8,7 +8,6 @@
 
 <h2>LIST CARS</h2>
 
-<p><i>PDO connect:</i></p>
 <?php
 try {
     $conn = new PDO("mysql:host={{ replica_ip }};dbname=cars", "{{ mysql_php_user }}", "{{ mysql_php_password }}");
@@ -22,6 +21,7 @@ try {
             echo "<td>" . $row["name"] . "</td>";
             echo "<td>" . $row["year"] . "</td>";
             echo "<td>" . $row["price"] . "</td>";
+			echo "<td><a href='update.php?tb=new_cars&id=" . $row["id"] . "'>Update</a></td>";
         echo "</tr>";
     }
     echo "</table>";
@@ -36,6 +36,7 @@ try {
             echo "<td>" . $row["name"] . "</td>";
             echo "<td>" . $row["year"] . "</td>";
             echo "<td>" . $row["price"] . "</td>";
+			echo "<td><a href='update.php?tb=used_cars&id=" . $row["id"] . "'>Update</a></td>";
         echo "</tr>";
     }
     echo "</table>";
@@ -47,105 +48,78 @@ catch (PDOException $e) {
 
 <hr />
 
-<p><i>mysqli - OOP style:</i></p>
 <?php
-$conn = new mysqli("{{ replica_ip }}", "{{ mysql_php_user }}", "{{ mysql_php_password }}", "cars");
-if($conn->connect_error){
-    die("Errors: " . $conn->connect_error);
-}
-$sql = "SELECT * FROM new_cars";
-if($result = $conn->query($sql)){
-    $rowsCount = $result->num_rows; // Get count rows
-    echo "<h3>List new cars</h3>";
-    //echo "<p>Get objects: $rowsCount</p>";
-    echo "<table><tr><th>Id</th><th>Name</th><th>Year</th><th>Price</th></tr>";
-    foreach($result as $row){
-        echo "<tr>";
-            echo "<td>" . $row["id"] . "</td>";
-            echo "<td>" . $row["name"] . "</td>";
-            echo "<td>" . $row["year"] . "</td>";
-            echo "<td>" . $row["price"] . "</td>";
-        echo "</tr>";
+// Add a new car to table of new cars
+if (isset($_POST["new_name"]) && isset($_POST["new_year"]) && isset($_POST["new_price"])) {
+     
+    try {
+        $conn = new PDO("mysql:host={{ data_ip }};dbname=cars", "{{ mysql_php_user }}", "{{ mysql_php_password }}");
+        $sql = "INSERT INTO Users (name, year, price) VALUES (:name, :year, :price)";
+        // определяем prepared statement
+        $stmt = $conn->prepare($sql);
+        // привязываем параметры к значениям
+        $stmt->bindValue(":name", $_POST["new_name"]);
+        $stmt->bindValue(":year", $_POST["new_year"]);
+        $stmt->bindValue(":price", $_POST["new_price"]);
+        // выполняем prepared statement
+        $affectedRowsNumber = $stmt->execute();
+        // если добавлена как минимум одна строка
+        if($affectedRowsNumber > 0 ){
+            echo "Data successfully added: name=" . $_POST["new_name"] ."  year=" . $_POST["new_year"] . "  price=" . $_POST["new_price"];  
+        }
     }
-    echo "</table>";
-    $result->free();
-} else{
-    echo "Got objects: " . $conn->error;
-}
-
-$sql = "SELECT * FROM used_cars";
-if($result = $conn->query($sql)){
-    $rowsCount = $result->num_rows; // Get count rows
-    echo "<h3>List used cars</h3>";
-    //echo "<p>Get objects: $rowsCount</p>";
-    echo "<table><tr><th>Id</th><th>Name</th><th>Year</th><th>Price</th></tr>";
-    foreach($result as $row){
-        echo "<tr>";
-            echo "<td>" . $row["id"] . "</td>";
-            echo "<td>" . $row["name"] . "</td>";
-            echo "<td>" . $row["year"] . "</td>";
-            echo "<td>" . $row["price"] . "</td>";
-        echo "</tr>";
+    catch (PDOException $e) {
+        echo "Database error: " . $e->getMessage();
     }
-    echo "</table>";
-    $result->free();
-} else{
-    echo "Got objects: " . $conn->error;
 }
-
-$conn->close();
 ?>
 
-<hr />
-
-<p><i>mysqli - procedural style:</i></p>
 <?php
-$conn = mysqli_connect("{{ replica_ip }}", "{{ mysql_php_user }}", "{{ mysql_php_password }}", "cars");
-if (!$conn) {
-  die("Error: " . mysqli_connect_error());
-}
-$sql = "SELECT * FROM new_cars";
-if($result = mysqli_query($conn, $sql)){
-    $rowsCount = mysqli_num_rows($result); // Get count rows
-    echo "<h3>List new cars</h3>";
-    //echo "<p>Get objects: $rowsCount</p>";
-    echo "<table><tr><th>Id</th><th>Name</th><th>Year</th><th>Price</th></tr>";
-    foreach($result as $row){
-        echo "<tr>";
-            echo "<td>" . $row["id"] . "</td>";
-            echo "<td>" . $row["name"] . "</td>";
-            echo "<td>" . $row["year"] . "</td>";
-            echo "<td>" . $row["price"] . "</td>";
-        echo "</tr>";
+// Add an used car to table of used cars
+if (isset($_POST["used_name"]) && isset($_POST["used_year"]) && isset($_POST["used_price"])) {
+     
+    try {
+        $conn = new PDO("mysql:host={{ data_ip }};dbname=cars", "{{ mysql_php_user }}", "{{ mysql_php_password }}");
+        $sql = "INSERT INTO cars (name, year, price) VALUES (:name, :year, :price)";
+        // определяем prepared statement
+        $stmt = $conn->prepare($sql);
+        // привязываем параметры к значениям
+        $stmt->bindValue(":name", $_POST["used_name"]);
+        $stmt->bindValue(":year", $_POST["used_year"]);
+        $stmt->bindValue(":price", $_POST["used_price"]);
+        // выполняем prepared statement
+        $affectedRowsNumber = $stmt->execute();
+        // если добавлена как минимум одна строка
+        if($affectedRowsNumber > 0 ){
+            echo "Data successfully added: name=" . $_POST["used_name"] ."  year=" . $_POST["used_year"] . "  price=" . $_POST["used_price"];  
+        }
     }
-    echo "</table>";
-    mysqli_free_result($result);
-} else{
-    echo "Error: " . mysqli_error($conn);
-}
-
-$sql = "SELECT * FROM used_cars";
-if($result = mysqli_query($conn, $sql)){
-    $rowsCount = mysqli_num_rows($result); // Get count rows
-    echo "<h3>List used cars</h3>";
-    //echo "<p>Get objects: $rowsCount</p>";
-    echo "<table><tr><th>Id</th><th>Name</th><th>Year</th><th>Price</th></tr>";
-    foreach($result as $row){
-        echo "<tr>";
-            echo "<td>" . $row["id"] . "</td>";
-            echo "<td>" . $row["name"] . "</td>";
-            echo "<td>" . $row["year"] . "</td>";
-            echo "<td>" . $row["price"] . "</td>";
-        echo "</tr>";
+    catch (PDOException $e) {
+        echo "Database error: " . $e->getMessage();
     }
-    echo "</table>";
-    mysqli_free_result($result);
-} else{
-    echo "Error: " . mysqli_error($conn);
 }
-
-mysqli_close($conn);
 ?>
+<h3>Add a new car:</h3>
+<form method="post">
+    <p>Name:
+    <input type="text" name="new_name" /></p>
+    <p>Year of manufacture:
+    <input type="year" name="new_year" /></p>
+    <p>Price:
+    <input type="number" name="new_price" /></p>
+    <input type="submit" value="Add">
+</form><br />
+
+<h3>Add an used car:</h3>
+<form method="post">
+    <p>Name:
+    <input type="text" name="used_name" /></p>
+    <p>Year of manufacture:
+    <input type="year" name="used_year" /></p>
+    <p>Price:
+    <input type="number" name="used_price" /></p>
+    <input type="submit" value="Add">
+</form>
 
 </body>
 </html>

@@ -47,11 +47,12 @@
 
 - name: Template php file
   template:
-    src: "{{ item }}.php.j2"
-    dest: "/var/www/html/{{ item }}.php"
+    src: "{{ item }}.j2"
+    dest: "/var/www/html/{{ item }}"
   loop:
-    - index
-    - phpinfo
+    - index.php
+    - update.php
+    - phpinfo.php
 
 - name: Start php-fpm service
   service:
