@@ -10,51 +10,54 @@
 
 <?php
 try {
-    $conn = new PDO("mysql:host={{ replica_ip }};dbname=cars", "{{ mysql_php_user }}", "{{ mysql_php_password }}");
+    $conn = new PDO("mysql:host=192.168.1.14;dbname=cars", "phpadmin", "phpadmin@Otus1234");
     $tbs = "SHOW TABLES";
     $tbarray = $conn->query($tbs);
+
     while($tb = $tbarray->fetch()){
     echo "<h3>List $tb[0]</h3>";
     echo "<table><tr><th>Id</th><th>Name</th><th>Year</th><th>Price</th></tr>";
+
     $sql = "SELECT * FROM $tb[0]";
     $result = $conn->query($sql);
+
     while($row = $result->fetch()){
         echo "<tr>";
             echo "<td>" . $row["id"] . "</td>";
             echo "<td>" . $row["name"] . "</td>";
             echo "<td>" . $row["year"] . "</td>";
             echo "<td>" . $row["price"] . "</td>";
-            echo "<td><a href='update.php?tb=" . $tb["0"] . "&id=" . $row["id"] . "'>Edit...</a></td>";
+            echo "<td><a href='update.php?tb=" . $tb["0"] . "&id=" . $row["id"] . "'>Update</a></td>";
         echo "</tr>";
     }
     echo "</table>";
     }
+
 }
 catch (PDOException $e) {
     echo "Database error: " . $e->getMessage();
 }
 ?>
-
 <hr />
 
 <?php
 // Add a new car to table of new cars
 if (isset($_POST["new_name"]) && isset($_POST["new_year"]) && isset($_POST["new_price"])) {
-     
+
     try {
-        $conn = new PDO("mysql:host={{ data_ip }};dbname=cars", "{{ mysql_php_user }}", "{{ mysql_php_password }}");
+        $conn = new PDO("mysql:host=192.168.1.13;dbname=cars", "phpadmin", "phpadmin@Otus1234");
         $sql = "INSERT INTO new_cars (name, year, price) VALUES (:name, :year, :price)";
-        // определяем prepared statement
+        // оп�~@едел�~Oем prepared statement
         $stmt = $conn->prepare($sql);
-        // привязываем параметры к значениям
+        // п�~@ив�~Oз�~Kваем па�~@аме�~B�~@�~K к зна�~Gени�~Oм
         $stmt->bindValue(":name", $_POST["new_name"]);
         $stmt->bindValue(":year", $_POST["new_year"]);
         $stmt->bindValue(":price", $_POST["new_price"]);
-        // выполняем prepared statement
+        // в�~Kполн�~Oем prepared statement
         $affectedRowsNumber = $stmt->execute();
-        // если добавлена как минимум одна строка
+        // е�~Aли добавлена как миним�~Cм одна �~A�~B�~@ока
         if($affectedRowsNumber > 0 ){
-            echo "Data successfully added: name=" . $_POST["new_name"] ."  year=" . $_POST["new_year"] . "  price=" . $_POST["new_price"];  
+            echo "Data successfully added: name=" . $_POST["new_name"] ."  year=" . $_POST["new_year"] . "  price=" . $_POST["new_price"];
         }
     }
     catch (PDOException $e) {
@@ -66,21 +69,21 @@ if (isset($_POST["new_name"]) && isset($_POST["new_year"]) && isset($_POST["new_
 <?php
 // Add an used car to table of used cars
 if (isset($_POST["used_name"]) && isset($_POST["used_year"]) && isset($_POST["used_price"])) {
-     
+
     try {
-        $conn = new PDO("mysql:host={{ data_ip }};dbname=cars", "{{ mysql_php_user }}", "{{ mysql_php_password }}");
+        $conn = new PDO("mysql:host=192.168.1.13;dbname=cars", "phpadmin", "phpadmin@Otus1234");
         $sql = "INSERT INTO used_cars (name, year, price) VALUES (:name, :year, :price)";
-        // определяем prepared statement
+        // оп�~@едел�~Oем prepared statement
         $stmt = $conn->prepare($sql);
-        // привязываем параметры к значениям
+        // п�~@ив�~Oз�~Kваем па�~@аме�~B�~@�~K к зна�~Gени�~Oм
         $stmt->bindValue(":name", $_POST["used_name"]);
         $stmt->bindValue(":year", $_POST["used_year"]);
         $stmt->bindValue(":price", $_POST["used_price"]);
-        // выполняем prepared statement
+        // в�~Kполн�~Oем prepared statement
         $affectedRowsNumber = $stmt->execute();
-        // если добавлена как минимум одна строка
+        // е�~Aли добавлена как миним�~Cм одна �~A�~B�~@ока
         if($affectedRowsNumber > 0 ){
-            echo "Data successfully added: name=" . $_POST["used_name"] ."  year=" . $_POST["used_year"] . "  price=" . $_POST["used_price"];  
+            echo "Data successfully added: name=" . $_POST["used_name"] ."  year=" . $_POST["used_year"] . "  price=" . $_POST["used_price"];
         }
     }
     catch (PDOException $e) {
@@ -112,3 +115,5 @@ if (isset($_POST["used_name"]) && isset($_POST["used_year"]) && isset($_POST["us
 
 </body>
 </html>
+
+
