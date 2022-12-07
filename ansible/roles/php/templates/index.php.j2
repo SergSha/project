@@ -9,13 +9,14 @@
 <h2>LIST CARS</h2>
 
 <?php
+// List of new and used cars
 try {
     $conn = new PDO("mysql:host={{ replica_ip }};dbname=cars", "{{ mysql_php_user }}", "{{ mysql_php_password }}");
     $tbs = "SHOW TABLES";
     $tbarray = $conn->query($tbs);
     while($tb = $tbarray->fetch()){
-    echo "<h3>List $tb[0]</h3>";
-    echo "<table><tr><th>Id</th><th>Name</th><th>Year</th><th>Price</th></tr>";
+    echo "<h3>List " . $tb["0"] . "</h3>";
+    echo "<table><tr><th>N</th><th>Name</th><th>Year</th><th>Price</th></tr>";
     $sql = "SELECT * FROM $tb[0]";
     $result = $conn->query($sql);
     while($row = $result->fetch()){
@@ -38,23 +39,24 @@ catch (PDOException $e) {
 <hr />
 
 <?php
-// Add a new car to table of new cars
-if (isset($_POST["new_name"]) && isset($_POST["new_year"]) && isset($_POST["new_price"])) {
+// Add a car to database
+if (isset($_POST["tb"]) && $_POST["name"]) && isset($_POST["year"]) && isset($_POST["price"])) {
      
     try {
         $conn = new PDO("mysql:host={{ data_ip }};dbname=cars", "{{ mysql_php_user }}", "{{ mysql_php_password }}");
-        $sql = "INSERT INTO new_cars (name, year, price) VALUES (:name, :year, :price)";
+        $sql = "INSERT INTO :tb (name, year, price) VALUES (:name, :year, :price)";
         // определяем prepared statement
         $stmt = $conn->prepare($sql);
         // привязываем параметры к значениям
-        $stmt->bindValue(":name", $_POST["new_name"]);
-        $stmt->bindValue(":year", $_POST["new_year"]);
-        $stmt->bindValue(":price", $_POST["new_price"]);
+        $stmt->bindValue(":tb", $_POST["tb"]);
+        $stmt->bindValue(":name", $_POST["name"]);
+        $stmt->bindValue(":year", $_POST["year"]);
+        $stmt->bindValue(":price", $_POST["price"]);
         // выполняем prepared statement
         $affectedRowsNumber = $stmt->execute();
         // если добавлена как минимум одна строка
         if($affectedRowsNumber > 0 ){
-            echo "Data successfully added: name=" . $_POST["new_name"] ."  year=" . $_POST["new_year"] . "  price=" . $_POST["new_price"];  
+            echo "Data successfully added: tb=" . $_POST["tb"] ."   name=" . $_POST["name"] ."  year=" . $_POST["year"] . "  price=" . $_POST["price"];  
         }
     }
     catch (PDOException $e) {
@@ -63,39 +65,16 @@ if (isset($_POST["new_name"]) && isset($_POST["new_year"]) && isset($_POST["new_
 }
 ?>
 
-<?php
-// Add an used car to table of used cars
-if (isset($_POST["used_name"]) && isset($_POST["used_year"]) && isset($_POST["used_price"])) {
-     
-    try {
-        $conn = new PDO("mysql:host={{ data_ip }};dbname=cars", "{{ mysql_php_user }}", "{{ mysql_php_password }}");
-        $sql = "INSERT INTO used_cars (name, year, price) VALUES (:name, :year, :price)";
-        // определяем prepared statement
-        $stmt = $conn->prepare($sql);
-        // привязываем параметры к значениям
-        $stmt->bindValue(":name", $_POST["used_name"]);
-        $stmt->bindValue(":year", $_POST["used_year"]);
-        $stmt->bindValue(":price", $_POST["used_price"]);
-        // выполняем prepared statement
-        $affectedRowsNumber = $stmt->execute();
-        // если добавлена как минимум одна строка
-        if($affectedRowsNumber > 0 ){
-            echo "Data successfully added: name=" . $_POST["used_name"] ."  year=" . $_POST["used_year"] . "  price=" . $_POST["used_price"];  
-        }
-    }
-    catch (PDOException $e) {
-        echo "Database error: " . $e->getMessage();
-    }
-}
-?>
 <h3>Add a new car:</h3>
 <form method="post">
+    <p>New or used:
+    <input type="text" name="tb" /></p>
     <p>Name:
-    <input type="text" name="new_name" /></p>
+    <input type="text" name="name" /></p>
     <p>Year of manufacture:
-    <input type="year" name="new_year" /></p>
+    <input type="year" name="year" /></p>
     <p>Price:
-    <input type="number" name="new_price" /></p>
+    <input type="number" name="price" /></p>
     <input type="submit" value="Add">
 </form><br />
 
