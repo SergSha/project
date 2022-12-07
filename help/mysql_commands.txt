@@ -10,14 +10,14 @@ GRANT REPLICATION SLAVE ON *.* TO repl@'%';
 FLUSH PRIVILEGES;
 
 CREATE DATABASE cars;
-CREATE TABLE cars.new_cars(id INT NOT NULL AUTO_INCREMENT, name VARCHAR(20), year YEAR, price INT, PRIMARY KEY(id));
-CREATE TABLE cars.used_cars (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(20), year YEAR, price INT, PRIMARY KEY(id));
-INSERT INTO cars.new_cars(name,year,price) VALUES("Lada",2022,1000000);
-INSERT INTO cars.used_cars (name, year, price) VALUES ("Toyota", 2021, 2000000), ("Nissan", 2020, 1800000);
+CREATE TABLE cars.new(id INT NOT NULL AUTO_INCREMENT, name VARCHAR(20), year YEAR, price INT, PRIMARY KEY(id));
+CREATE TABLE cars.used (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(20), year YEAR, price INT, PRIMARY KEY(id));
+INSERT INTO cars.new(name,year,price) VALUES("Lada",2022,1000000);
+INSERT INTO cars.used (name, year, price) VALUES ("Toyota", 2021, 2000000), ("Nissan", 2020, 1800000);
 
-INSERT INTO cars.new_cars (name, year, price) VALUES ("Renault", 2021, 1900000), ("Ford", 2022, 2800000);
+INSERT INTO cars.new (name, year, price) VALUES ("Renault", 2021, 1900000), ("Ford", 2022, 2800000);
 
-INSERT INTO cars.new_cars (name, year, price) VALUES ("Volga", 2022, 1600000), ("Volvo", 2022, 4800000);
+INSERT INTO cars.new (name, year, price) VALUES ("Volga", 2022, 1600000), ("Volvo", 2022, 4800000);
 
 mysql -e "GRANT SELECT, SHOW VIEW, RELOAD, REPLICATION CLIENT, EVENT, TRIGGER, LOCK TABLES, PROCESS, EXECUTE ON *.* TO backup@localhost IDENTIFIED WITH 'mysql_native_password' BY 'backup@Otus1234';"
 

@@ -25,11 +25,12 @@ try {
             echo "<td>" . $row["name"] . "</td>";
             echo "<td>" . $row["year"] . "</td>";
             echo "<td>" . $row["price"] . "</td>";
-            echo "<td><a href='update.php?tb=" . $tb["0"] . "&id=" . $row["id"] . "'>Edit...</a></td>";
+            echo "<td><a href='update.php?tb=" . $tb["0"] . "&id=" . $row["id"] . "'>Edit</a></td>";
         echo "</tr>";
     }
     echo "</table>";
     }
+    $conn = null;
 }
 catch (PDOException $e) {
     echo "Database error: " . $e->getMessage();
@@ -40,7 +41,7 @@ catch (PDOException $e) {
 
 <?php
 // Add a car to database
-if (isset($_POST["tb"]) && $_POST["name"]) && isset($_POST["year"]) && isset($_POST["price"])) {
+if (isset($_POST["tb"]) && isset($_POST["name"]) && isset($_POST["year"]) && isset($_POST["price"])) {
      
     try {
         $conn = new PDO("mysql:host={{ data_ip }};dbname=cars", "{{ mysql_php_user }}", "{{ mysql_php_password }}");
@@ -56,8 +57,9 @@ if (isset($_POST["tb"]) && $_POST["name"]) && isset($_POST["year"]) && isset($_P
         $affectedRowsNumber = $stmt->execute();
         // если добавлена как минимум одна строка
         if($affectedRowsNumber > 0 ){
-            echo "Data successfully added: tb=" . $_POST["tb"] ."   name=" . $_POST["name"] ."  year=" . $_POST["year"] . "  price=" . $_POST["price"];  
+            echo "Data successfully added: tb=" . $_POST["tb"] . "  name=" . $_POST["name"] . "  year=" . $_POST["year"] . "  price=" . $_POST["price"];
         }
+        $conn = null;
     }
     catch (PDOException $e) {
         echo "Database error: " . $e->getMessage();
@@ -65,9 +67,14 @@ if (isset($_POST["tb"]) && $_POST["name"]) && isset($_POST["year"]) && isset($_P
 }
 ?>
 
-<h3>Add a new car:</h3>
+<h3>Add a car:</h3>
 <form method="post">
-    <p>New or used:
+    <!-- <p><label for="tb">New or used:</label>
+    <select id="cars" name="tb">
+    <option value="new">new</option>
+    <option value="used">used</option>
+    </select></p> -->
+    <p>Table:
     <input type="text" name="tb" /></p>
     <p>Name:
     <input type="text" name="name" /></p>
@@ -75,18 +82,7 @@ if (isset($_POST["tb"]) && $_POST["name"]) && isset($_POST["year"]) && isset($_P
     <input type="year" name="year" /></p>
     <p>Price:
     <input type="number" name="price" /></p>
-    <input type="submit" value="Add">
-</form><br />
-
-<h3>Add an used car:</h3>
-<form method="post">
-    <p>Name:
-    <input type="text" name="used_name" /></p>
-    <p>Year of manufacture:
-    <input type="year" name="used_year" /></p>
-    <p>Price:
-    <input type="number" name="used_price" /></p>
-    <input type="submit" value="Add">
+    <input type="submit" value="Add" />
 </form>
 
 </body>
