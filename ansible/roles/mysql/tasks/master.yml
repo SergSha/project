@@ -28,4 +28,6 @@
     name: mysql
     state: restarted
 
-
+- name: data | Upload database to mysql
+  command: mysql -e "SOURCE /vagrant/dbmaster.sql;"
+  ignore_errors: yes

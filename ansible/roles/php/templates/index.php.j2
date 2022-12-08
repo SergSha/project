@@ -15,7 +15,7 @@ try {
     $tbs = "SHOW TABLES";
     $tbarray = $conn->query($tbs);
     while($tb = $tbarray->fetch()){
-    echo "<h3>List " . $tb["0"] . "</h3>";
+    echo "<h3>List " . $tb["0"] . " cars</h3>";
     echo "<table><tr><th>N</th><th>Name</th><th>Year</th><th>Price</th></tr>";
     $sql = "SELECT * FROM $tb[0]";
     $result = $conn->query($sql);
@@ -26,6 +26,11 @@ try {
             echo "<td>" . $row["year"] . "</td>";
             echo "<td>" . $row["price"] . "</td>";
             echo "<td><a href='update.php?tb=" . $tb["0"] . "&id=" . $row["id"] . "'>Edit</a></td>";
+            echo "<td><form action='delete.php' method='post'>
+                        <input type='hidden' name='tb' value='" . $tb["0"] . "' />
+                        <input type='hidden' name='id' value='" . $row["id"] . "' />
+                        <input type='submit' value='Delete'>
+                    </form></td>";
         echo "</tr>";
     }
     echo "</table>";
@@ -43,13 +48,14 @@ catch (PDOException $e) {
 // Add a car to database
 if (isset($_POST["tb"]) && isset($_POST["name"]) && isset($_POST["year"]) && isset($_POST["price"])) {
      
+    $tb = $_POST["tb"];
     try {
         $conn = new PDO("mysql:host={{ data_ip }};dbname=cars", "{{ mysql_php_user }}", "{{ mysql_php_password }}");
-        $sql = "INSERT INTO :tb (name, year, price) VALUES (:name, :year, :price)";
+        $sql = "INSERT INTO $tb (name, year, price) VALUES (:name, :year, :price)";
         // определяем prepared statement
         $stmt = $conn->prepare($sql);
         // привязываем параметры к значениям
-        $stmt->bindValue(":tb", $_POST["tb"]);
+        //$stmt->bindValue(":tb", $_POST["tb"]);
         $stmt->bindValue(":name", $_POST["name"]);
         $stmt->bindValue(":year", $_POST["year"]);
         $stmt->bindValue(":price", $_POST["price"]);
@@ -69,13 +75,11 @@ if (isset($_POST["tb"]) && isset($_POST["name"]) && isset($_POST["year"]) && iss
 
 <h3>Add a car:</h3>
 <form method="post">
-    <!-- <p><label for="tb">New or used:</label>
+    <p><label for="tb">New or used:</label>
     <select id="cars" name="tb">
     <option value="new">new</option>
     <option value="used">used</option>
-    </select></p> -->
-    <p>Table:
-    <input type="text" name="tb" /></p>
+    </select></p>
     <p>Name:
     <input type="text" name="name" /></p>
     <p>Year of manufacture:

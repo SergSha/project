@@ -346,7 +346,7 @@ CREATE TABLE `innodb_index_stats` (
 
 LOCK TABLES `innodb_index_stats` WRITE;
 /*!40000 ALTER TABLE `innodb_index_stats` DISABLE KEYS */;
-INSERT INTO `innodb_index_stats` VALUES ('cars','new_cars','PRIMARY','2022-12-02 14:35:27','n_diff_pfx01',3,1,'id'),('cars','new_cars','PRIMARY','2022-12-02 14:35:27','n_leaf_pages',1,NULL,'Number of leaf pages in the index'),('cars','new_cars','PRIMARY','2022-12-02 14:35:27','size',1,NULL,'Number of pages in the index'),('cars','used_cars','PRIMARY','2022-12-02 14:28:13','n_diff_pfx01',2,1,'id'),('cars','used_cars','PRIMARY','2022-12-02 14:28:13','n_leaf_pages',1,NULL,'Number of leaf pages in the index'),('cars','used_cars','PRIMARY','2022-12-02 14:28:13','size',1,NULL,'Number of pages in the index'),('mysql','gtid_executed','PRIMARY','2022-12-02 14:19:54','n_diff_pfx01',0,1,'source_uuid'),('mysql','gtid_executed','PRIMARY','2022-12-02 14:19:54','n_diff_pfx02',0,1,'source_uuid,interval_start'),('mysql','gtid_executed','PRIMARY','2022-12-02 14:19:54','n_leaf_pages',1,NULL,'Number of leaf pages in the index'),('mysql','gtid_executed','PRIMARY','2022-12-02 14:19:54','size',1,NULL,'Number of pages in the index'),('sys','sys_config','PRIMARY','2022-12-02 14:19:54','n_diff_pfx01',6,1,'variable'),('sys','sys_config','PRIMARY','2022-12-02 14:19:54','n_leaf_pages',1,NULL,'Number of leaf pages in the index'),('sys','sys_config','PRIMARY','2022-12-02 14:19:54','size',1,NULL,'Number of pages in the index');
+INSERT INTO `innodb_index_stats` VALUES ('cars','new','PRIMARY','2022-12-02 14:35:27','n_diff_pfx01',3,1,'id'),('cars','new','PRIMARY','2022-12-02 14:35:27','n_leaf_pages',1,NULL,'Number of leaf pages in the index'),('cars','new','PRIMARY','2022-12-02 14:35:27','size',1,NULL,'Number of pages in the index'),('cars','used','PRIMARY','2022-12-02 14:28:13','n_diff_pfx01',2,1,'id'),('cars','used','PRIMARY','2022-12-02 14:28:13','n_leaf_pages',1,NULL,'Number of leaf pages in the index'),('cars','used','PRIMARY','2022-12-02 14:28:13','size',1,NULL,'Number of pages in the index'),('mysql','gtid_executed','PRIMARY','2022-12-02 14:19:54','n_diff_pfx01',0,1,'source_uuid'),('mysql','gtid_executed','PRIMARY','2022-12-02 14:19:54','n_diff_pfx02',0,1,'source_uuid,interval_start'),('mysql','gtid_executed','PRIMARY','2022-12-02 14:19:54','n_leaf_pages',1,NULL,'Number of leaf pages in the index'),('mysql','gtid_executed','PRIMARY','2022-12-02 14:19:54','size',1,NULL,'Number of pages in the index'),('sys','sys_config','PRIMARY','2022-12-02 14:19:54','n_diff_pfx01',6,1,'variable'),('sys','sys_config','PRIMARY','2022-12-02 14:19:54','n_leaf_pages',1,NULL,'Number of leaf pages in the index'),('sys','sys_config','PRIMARY','2022-12-02 14:19:54','size',1,NULL,'Number of pages in the index');
 /*!40000 ALTER TABLE `innodb_index_stats` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -374,7 +374,7 @@ CREATE TABLE `innodb_table_stats` (
 
 LOCK TABLES `innodb_table_stats` WRITE;
 /*!40000 ALTER TABLE `innodb_table_stats` DISABLE KEYS */;
-INSERT INTO `innodb_table_stats` VALUES ('cars','new_cars','2022-12-02 14:35:27',3,1,0),('cars','used_cars','2022-12-02 14:28:13',2,1,0),('mysql','gtid_executed','2022-12-02 14:19:54',0,1,0),('sys','sys_config','2022-12-02 14:19:54',6,1,0);
+INSERT INTO `innodb_table_stats` VALUES ('cars','new','2022-12-02 14:35:27',3,1,0),('cars','used','2022-12-02 14:28:13',2,1,0),('mysql','gtid_executed','2022-12-02 14:19:54',0,1,0),('sys','sys_config','2022-12-02 14:19:54',6,1,0);
 /*!40000 ALTER TABLE `innodb_table_stats` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -950,13 +950,13 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `cars` /*!40100 DEFAULT CHARACTER SET l
 USE `cars`;
 
 --
--- Table structure for table `new_cars`
+-- Table structure for table `new`
 --
 
-DROP TABLE IF EXISTS `new_cars`;
+DROP TABLE IF EXISTS `new`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `new_cars` (
+CREATE TABLE `new` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) DEFAULT NULL,
   `year` year(4) DEFAULT NULL,
@@ -966,23 +966,23 @@ CREATE TABLE `new_cars` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `new_cars`
+-- Dumping data for table `new`
 --
 
-LOCK TABLES `new_cars` WRITE;
-/*!40000 ALTER TABLE `new_cars` DISABLE KEYS */;
-INSERT INTO `new_cars` VALUES (1,'lada',2022,1000000),(2,'Renault',2021,1900000),(3,'Ford',2022,2800000);
-/*!40000 ALTER TABLE `new_cars` ENABLE KEYS */;
+LOCK TABLES `new` WRITE;
+/*!40000 ALTER TABLE `new` DISABLE KEYS */;
+INSERT INTO `new` VALUES (1,'Lada',2022,1000000),(2,'Renault',2021,1900000),(3,'Ford',2022,2800000);
+/*!40000 ALTER TABLE `new` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `used_cars`
+-- Table structure for table `used`
 --
 
-DROP TABLE IF EXISTS `used_cars`;
+DROP TABLE IF EXISTS `used`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `used_cars` (
+CREATE TABLE `used` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) DEFAULT NULL,
   `year` year(4) DEFAULT NULL,
@@ -992,13 +992,13 @@ CREATE TABLE `used_cars` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `used_cars`
+-- Dumping data for table `used`
 --
 
-LOCK TABLES `used_cars` WRITE;
-/*!40000 ALTER TABLE `used_cars` DISABLE KEYS */;
-INSERT INTO `used_cars` VALUES (1,'Toyota',2021,2000000),(2,'Nissan',2020,1800000);
-/*!40000 ALTER TABLE `used_cars` ENABLE KEYS */;
+LOCK TABLES `used` WRITE;
+/*!40000 ALTER TABLE `used` DISABLE KEYS */;
+INSERT INTO `used` VALUES (1,'Toyota',2021,2000000),(2,'Nissan',2020,1800000);
+/*!40000 ALTER TABLE `used` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
