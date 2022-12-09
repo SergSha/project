@@ -19,10 +19,10 @@ if($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["tb"]) && isset($_GET["id
 {
     $tb = $_GET["tb"];
     $id = $_GET["id"];
-    $sql = "SELECT * FROM :tb WHERE id = :id";
+    $sql = "SELECT * FROM $tb WHERE id = $id";
     $stmt = $conn->prepare($sql);
-    $stmt->bindValue(":tb", $tb);
-    $stmt->bindValue(":id", $id);
+    //$stmt->bindValue(":tb", $tb);
+    //$stmt->bindValue(":id", $id);
     // выполняем выражение и получаем пользователя по id
     $stmt->execute();
     if($stmt->rowCount() > 0){
@@ -41,7 +41,7 @@ if($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["tb"]) && isset($_GET["id
                     <input type='year' name='year' value='$year' /></p>
                     <p>Price:
                     <input type='number' name='price' value='$price' /></p>
-                    <input type='submit' value='Сохранить' />
+                    <input type='submit' value='Save' />
             </form>";
     }
     else{
