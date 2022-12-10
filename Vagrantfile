@@ -94,6 +94,7 @@ Vagrant.configure("2") do |config|
           ansible.playbook = "ansible/playbook.yml"
           ansible.inventory_path = "ansible/hosts"
           ansible.host_key_checking = "false"
+          ansible.verbose = "v"
           ansible.limit = "all"
         end
       end

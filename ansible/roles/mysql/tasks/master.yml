@@ -29,5 +29,5 @@
     state: restarted
 
 - name: data | Upload database to mysql
-  command: mysql -e "SOURCE /vagrant/dbmaster.sql;"
+  shell: mysql -e "CREATE DATABASE cars;" && mysql cars < /vagrant/cars.sql
   ignore_errors: yes

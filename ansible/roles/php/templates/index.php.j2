@@ -19,28 +19,29 @@ try {
     echo "<table><tr><th>N</th><th>Name</th><th>Year</th><th>Price</th></tr>";
     $sql = "SELECT * FROM $tb[0]";
     $result = $conn->query($sql);
+    $count = 1;
     while($row = $result->fetch()){
         echo "<tr>";
-            echo "<td>" . $row["id"] . "</td>";
+            echo "<td>" . $count . "</td>";
             echo "<td>" . $row["name"] . "</td>";
             echo "<td>" . $row["year"] . "</td>";
             echo "<td>" . $row["price"] . "</td>";
             //echo "<td><a href='update.php?tb=" . $tb["0"] . "&id=" . $row["id"] . "'>Edit</a></td>";
             echo "<td><form action='update.php' method='get'>
-                       <input type='hidden' name='tb' value='" . $tb["0"] . "' />
-                       <input type='hidden' name='id' value='" . $row["id"] . "' />
-                       <input type='submit' value='Edit...' />
-                     </form></td>";
+                <input type='hidden' name='tb' value='" . $tb["0"] . "' />
+                <input type='hidden' name='id' value='" . $row["id"] . "' />
+                <input type='submit' value='Edit...' />
+                </form></td>";
             echo "<td><form action='delete.php' method='post'>
-                        <input type='hidden' name='tb' value='" . $tb["0"] . "' />
-                        <input type='hidden' name='id' value='" . $row["id"] . "' />
-                        <input type='submit' value='Delete'>
-                    </form></td>";
+                <input type='hidden' name='tb' value='" . $tb["0"] . "' />
+                <input type='hidden' name='id' value='" . $row["id"] . "' />
+                <input type='submit' value='Delete'>
+                </form></td>";
         echo "</tr>";
+        $count++;
     }
     echo "</table>";
     }
-    $conn = null;
 }
 catch (PDOException $e) {
     echo "Database error: " . $e->getMessage();
@@ -49,37 +50,8 @@ catch (PDOException $e) {
 
 <hr />
 
-<?php
-// Add a car to database
-if (isset($_POST["tb"]) && isset($_POST["name"]) && isset($_POST["year"]) && isset($_POST["price"])) {
-     
-    $tb = $_POST["tb"];
-    try {
-        $conn = new PDO("mysql:host={{ data_ip }};dbname=cars", "{{ mysql_php_user }}", "{{ mysql_php_password }}");
-        $sql = "INSERT INTO $tb (name, year, price) VALUES (:name, :year, :price)";
-        // определяем prepared statement
-        $stmt = $conn->prepare($sql);
-        // привязываем параметры к значениям
-        //$stmt->bindValue(":tb", $_POST["tb"]);
-        $stmt->bindValue(":name", $_POST["name"]);
-        $stmt->bindValue(":year", $_POST["year"]);
-        $stmt->bindValue(":price", $_POST["price"]);
-        // выполняем prepared statement
-        $affectedRowsNumber = $stmt->execute();
-        // если добавлена как минимум одна строка
-        if($affectedRowsNumber > 0 ){
-            echo "Data successfully added: tb=" . $_POST["tb"] . "  name=" . $_POST["name"] . "  year=" . $_POST["year"] . "  price=" . $_POST["price"];
-        }
-        $conn = null;
-    }
-    catch (PDOException $e) {
-        echo "Database error: " . $e->getMessage();
-    }
-}
-?>
-
 <h3>Add a car:</h3>
-<form method="post">
+<form action="add.php" method="post">
     <p><label for="tb">New or used:</label>
     <select id="cars" name="tb">
     <option value="new">new</option>

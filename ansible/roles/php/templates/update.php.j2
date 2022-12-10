@@ -50,8 +50,8 @@ if($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["tb"]) && isset($_GET["id
 }
 elseif (isset($_POST["tb"]) && isset($_POST["id"]) && isset($_POST["name"]) && isset($_POST["year"]) && isset($_POST["price"])) {
       
-    $tb = $_POST["tb"]);
-    $sql = "UPDATE $tb SET name = :name, year = :year WHERE id = :id";
+    $tb = $_POST["tb"];
+    $sql = "UPDATE $tb SET name = :name, year = :year, price = :price WHERE id = :id";
     $stmt = $conn->prepare($sql);
     //$stmt->bindValue(":tb", $_POST["tb"]);
     $stmt->bindValue(":id", $_POST["id"]);

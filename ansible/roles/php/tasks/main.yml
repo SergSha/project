@@ -51,7 +51,9 @@
     dest: "/var/www/html/{{ item }}"
   loop:
     - index.php
+    - add.php
     - update.php
+    - delete.php
     - phpinfo.php
 
 - name: Start php-fpm service
