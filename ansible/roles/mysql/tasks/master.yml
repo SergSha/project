@@ -29,5 +29,5 @@
     state: restarted
 
 - name: data | Upload database to mysql
-  shell: mysql -e "CREATE DATABASE cars;" && mysql cars < /vagrant/cars.sql
+  shell: mysql -e "CREATE DATABASE cars;" && zcat /vagrant/cars.sql.gz | mysql cars
   ignore_errors: yes

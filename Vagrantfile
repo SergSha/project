@@ -4,7 +4,7 @@
 MACHINES = {
   :fw => {
     :box_name => "centos/7",
-    :vm_name => "fw",
+#    :vm_name => "fw",
     #:public => {:ip => '10.10.10.1', :adapter => 1},
     :net => [
       {ip: '192.168.1.11', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "privnet"},
@@ -13,7 +13,7 @@ MACHINES = {
   },
   :web => {
     :box_name => "centos/7",
-    :vm_name => "web",
+#    :vm_name => "web",
     :net => [
       {ip: '192.168.1.12', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "privnet"},
       {ip: '192.168.200.12', adapter: 8},
@@ -21,7 +21,7 @@ MACHINES = {
   },
   :data => {
     :box_name => "centos/7",
-    :vm_name => "data",
+#    :vm_name => "data",
     :net => [
       {ip: '192.168.1.13', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "privnet"},
       {ip: '192.168.200.13', adapter: 8},
@@ -29,7 +29,7 @@ MACHINES = {
   },
   :replica => {
     :box_name => "centos/7",
-    :vm_name => "replica",
+#    :vm_name => "replica",
     :net => [
       {ip: '192.168.1.14', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "privnet"},
       {ip: '192.168.200.14', adapter: 8},
@@ -37,7 +37,7 @@ MACHINES = {
   },
   :backup => {
     :box_name => "centos/7",
-    :vm_name => "backup",
+#    :vm_name => "backup",
     :net => [
       {ip: '192.168.1.15', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "privnet"},
       {ip: '192.168.200.15', adapter: 8},
@@ -69,27 +69,8 @@ Vagrant.configure("2") do |config|
 #        sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 #        systemctl restart sshd
       SHELL
-#      case boxname.to_s
-#      when "fw"
-#        box.vm.provision "shell", run: "always", inline: <<-SHELL
-#          sysctl net.ipv4.conf.all.forwarding=1
-#          iptables -t nat -A POSTROUTING ! -d 192.168.0.0/16 -o eth0 -j MASQUERADE
-#        SHELL
-#      when "centralRouter"
-#        box.vm.provision "shell", run: "always", inline: <<-SHELL
-#          sysctl net.ipv4.conf.all.forwarding=1
-#          echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0 
-#          echo "GATEWAY=192.168.255.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
-#          systemctl restart network
-#        SHELL
-#      when "centralServer"
-#        box.vm.provision "shell", run: "always", inline: <<-SHELL
-#          echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0 
-#          echo "GATEWAY=192.168.0.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
-#          systemctl restart network
-#        SHELL
-#      end
-      if boxconfig[:vm_name] == "backup"
+#      if boxconfig[:vm_name] == "backup"
+      if boxname.to_s == "backup"
         box.vm.provision "ansible" do |ansible|
           ansible.playbook = "ansible/playbook.yml"
           ansible.inventory_path = "ansible/hosts"
