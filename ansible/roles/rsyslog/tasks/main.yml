@@ -1,0 +1,12 @@
+---
+# tasks file for rsyslog
+
+- name: logger | Uncomment lines in rsyslog config file
+  lineinfile:
+    path: /etc/rsyslog.conf
+    regexp: '^#(.*{{ item }}*)'
+    replace: '\1'
+  loop:
+    - "$ModLoad imudp"
+    - "$UDPServerRun 514"
+
