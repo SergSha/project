@@ -9,6 +9,11 @@
       policy: targeted
       state: permissive
 
+  - name: All hosts | Setup the same time (Moscow timezone) on all hosts
+    command: cp -f /usr/share/zoneinfo/Europe/Moscow /etc/localtime
+    notify:
+    - Chronyd Restart
+
 - name: Install nginx
   hosts: fw
   become: true
