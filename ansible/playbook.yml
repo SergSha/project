@@ -14,7 +14,9 @@
     ignore_errors: yes
 
   - name: All hosts | Chronyd Restart
-    service: name=chronyd.service state=restarted
+    service:
+      name: chronyd.service
+      state: restarted
 
 - name: Install nginx
   hosts: fw
@@ -33,6 +35,18 @@
   become: true
   roles:
     - { role: mysql, when: ansible_system == 'Linux' }
+
+- name: Configure rsyslog
+  hosts: all
+  become: true
+  roles:
+    - { role: rsyslog, when: ansible_system == 'Linux' }
+
+#- name: Configure audit
+#  hosts: all
+#  become: true
+#  roles:
+#    - { role: audit, when: ansible_system == 'Linux' }
 
 #- name: Install nfs
 #  hosts: web data

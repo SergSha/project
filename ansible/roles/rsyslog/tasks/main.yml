@@ -1,12 +1,24 @@
 ---
 # tasks file for rsyslog
 
-- name: logger | Uncomment lines in rsyslog config file
-  lineinfile:
-    path: /etc/rsyslog.conf
-    regexp: '^#(.*{{ item }}*)'
-    replace: '\1'
-  loop:
-    - "$ModLoad imudp"
-    - "$UDPServerRun 514"
+- name: Include nginx log tasks
+  include_tasks: nginx.yml
+  when: '"fw" in ansible_hostname'
+
+- name: Include web tasks
+  include_tasks: web.yml
+  when: '"web" in ansible_hostname'
+
+- name: Include mysql tasks
+  include_tasks: mysql.yml
+  when: '"mysql" in ansible_group'
+
+- name: Include backup tasks
+  include_tasks: backup.yml
+  when: '"backup" in ansible_hostname'
+
+- name: Include logger tasks
+  include_tasks: logger.yml
+  when: '"logger" in ansible_hostname'
+
 
