@@ -11,8 +11,10 @@
 
   - name: All hosts | Setup the same time (Moscow timezone) on all hosts
     command: cp -f /usr/share/zoneinfo/Europe/Moscow /etc/localtime
-    notify:
-    - Chronyd Restart
+    ignore_errors: yes
+
+  - name: All hosts | Chronyd Restart
+    service: name=chronyd.service state=restarted
 
 - name: Install nginx
   hosts: fw
