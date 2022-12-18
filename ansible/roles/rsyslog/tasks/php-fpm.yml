@@ -1,0 +1,25 @@
+---
+# tasks file for rsyslog
+
+- name: web | Edit php-fpm config file /etc/php-fpm.conf
+  lineinfile: 
+    path: /etc/php-fpm.conf
+    insertafter: "{{ item.afterline }}"
+    line: "{{ item.line }}"
+  loop:
+    - { afterline: "error_log = /var/log/php-fpm/error.log", line: "error_log = syslog" }
+
+- name: web | Edit php-fpm config file /etc/php-fpm.d/www.conf
+  lineinfile: 
+    path: /etc/php-fpm.d/www.conf
+    insertafter: "{{ item.afterline }}"
+    line: "{{ item.line }}"
+  loop:
+    - { afterline: "access.log = log/$pool.access.log", line: "access.log = syslog" }
+    - { afterline: "slowlog = /var/log/php-fpm/www-slow.log", line: "slowlog = syslog" }
+    - { afterline: "php_admin_value[error_log] = /var/log/php-fpm/www-error.log", line: "php_admin_value[error_log] = syslog" }
+
+- name: Restart php-fpm service
+  service:
+    name: php-fpm
+    state: restarted

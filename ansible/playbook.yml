@@ -19,19 +19,19 @@
       state: restarted
 
 - name: Install nginx
-  hosts: fw
+  hosts: routers
   become: true
   roles:
     - { role: nginx, when: ansible_system == 'Linux' }
 
 - name: Install php
-  hosts: web
+  hosts: webs
   become: true
   roles:
     - { role: php, when: ansible_system == 'Linux' }
 
 - name: Install mysql
-  hosts: data replica backup
+  hosts: mysql
   become: true
   roles:
     - { role: mysql, when: ansible_system == 'Linux' }

@@ -1,0 +1,16 @@
+---
+# tasks file for rsyslog
+
+- name: mysql group | Edit mysql config file /etc/my.cnf.d/01-base.cnf
+  lineinfile: 
+    path: /etc/my.cnf.d/01-base.cnf
+    insertafter: "{{ item.afterline }}"
+    line: "{{ item.line }}"
+  loop:
+    - { afterline: "log-error=/var/log/mysqld.log", line: "log-error=syslog" }
+
+- name: Restart mysql service
+  service:
+    name: mysql
+    state: restarted
+

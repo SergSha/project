@@ -42,15 +42,15 @@ MACHINES = {
       {ip: '192.168.1.15', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "privnet"},
       {ip: '192.168.200.15', adapter: 8},
     ]
-  }#,
-#  :logger => {
-#    :box_name => "centos/7",
+  },
+  :logger => {
+    :box_name => "centos/7",
 #    :vm_name => "logger",
-#    :net => [
-#      {ip: '192.168.1.16', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "privnet"},
-#      {ip: '192.168.200.16', adapter: 8},
-#    ]
-#  }
+    :net => [
+      {ip: '192.168.1.16', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "privnet"},
+      {ip: '192.168.200.16', adapter: 8},
+    ]
+  }
 }
 Vagrant.configure("2") do |config|
   MACHINES.each do |boxname, boxconfig|
@@ -69,13 +69,13 @@ Vagrant.configure("2") do |config|
 #        sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 #        systemctl restart sshd
       SHELL
-#      if boxconfig[:vm_name] == "backup"
-      if boxname.to_s == "backup"
+#      if boxconfig[:vm_name] == "logger"
+      if boxname.to_s == "logger"
         box.vm.provision "ansible" do |ansible|
           ansible.playbook = "ansible/playbook.yml"
           ansible.inventory_path = "ansible/hosts"
           ansible.host_key_checking = "false"
-          ansible.verbose = "v"
+#          ansible.verbose = "v"
           ansible.limit = "all"
         end
       end

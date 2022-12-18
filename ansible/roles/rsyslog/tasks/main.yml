@@ -1,24 +1,38 @@
 ---
 # tasks file for rsyslog
 
+- name: Configure rsyslog config file /etc/rsyslog.conf in client hosts
+  lineinfile:
+    path: /etc/rsyslog.conf
+    insertafter: "{{ item.afterline }}"
+    line: "{{ item.line }}"
+  loop:
+    - { afterline: "#*.* @@remote-host:514", line: "*.* @@{{ logger_ip }}:514" }
+  when: "'logger' not in ansible_hostname"
+
 - name: Include nginx log tasks
   include_tasks: nginx.yml
-  when: '"fw" in ansible_hostname'
+  when: "'routers' in group_names"
 
-- name: Include web tasks
-  include_tasks: web.yml
-  when: '"web" in ansible_hostname'
+- name: Include php-fpm tasks
+  include_tasks: php-fpm.yml
+  when: "'webs' in group_names"
 
 - name: Include mysql tasks
   include_tasks: mysql.yml
-  when: '"mysql" in ansible_group'
+  when: "'mysql' in group_names"
 
-- name: Include backup tasks
-  include_tasks: backup.yml
-  when: '"backup" in ansible_hostname'
+#- name: Include backup tasks
+#  include_tasks: backup.yml
+#  when: "'backup' in ansible_hostname"
 
 - name: Include logger tasks
   include_tasks: logger.yml
-  when: '"logger" in ansible_hostname'
+  when: "'logger' in ansible_hostname"
 
+- name: restart rsyslog
+  service:
+    name: rsyslog
+    state: restarted
+    enabled: yes
 

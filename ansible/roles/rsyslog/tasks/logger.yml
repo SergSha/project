@@ -2,25 +2,20 @@
 # tasks file for rsyslog
 
 - name: logger | Edit rsyslog config file /etc/rsyslog.conf
-  lineinfile:
+  replace:
     path: /etc/rsyslog.conf
-    regexp: '^#(.*{{ item }}.*)'
+    regexp: '^#(.*\{{ item }}.*)$'
     replace: '\1'
   loop:
-    - "$ModLoad imudp"
-    - "$UDPServerRun 514"
-    - "$ModLoad imtcp"
-    - "$InputTCPServerRun 514"
+    - '$ModLoad imudp'
+    - '$UDPServerRun 514'
+    - '$ModLoad imtcp'
+    - '$InputTCPServerRun 514'
 
 - name: Edit Rsyslog config file /etc/rsyslog.conf
   lineinfile: 
     path: /etc/rsyslog.conf
-    insertafter: EOF
-    line: "\n# Add remote logs\n$template RemoteLogs,\"/var/log/rsyslog/%HOSTNAME%/%PROGRAMNAME%.log\"\n*.* ?RemoteLogs"
+    insertbefore: 'GLOBAL DIRECTIVES'
+    line: "# Rules for processing the remote logs\n$template RemoteLogs,\"/var/log/rsyslog/%HOSTNAME%/%PROGRAMNAME%.log\"\n*.* ?RemoteLogs\n&~\n"
     state: present
-
-- name: Rsyslog Restart
-  service:
-    name: rsyslog.service
-    state: restarted
 
