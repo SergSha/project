@@ -16,6 +16,6 @@
   lineinfile: 
     path: /etc/rsyslog.conf
     insertbefore: 'GLOBAL DIRECTIVES'
-    line: "# Rules for processing the remote logs\n$template RemoteLogs,\"/var/log/rsyslog/%HOSTNAME%/%PROGRAMNAME%.log\"\n*.* ?RemoteLogs\n&~\n"
+    line: "# Rules for processing the remote logs\n$template RemoteLogs,\"/var/log/rsyslog/%HOSTNAME%/%PROGRAMNAME%.log\"\n*.* ?RemoteLogs\n& ~\n"
     state: present
 
