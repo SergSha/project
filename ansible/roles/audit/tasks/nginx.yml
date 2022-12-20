@@ -1,0 +1,14 @@
+---
+# tasks file for audit
+
+# Добавим правило, которое будет отслеживать изменения в конфигруации nginx
+- name: Add rules for tracking nginx config
+  lineinfile: 
+    path: /etc/audit/rules.d/audit.rules
+    insertafter: EOF
+    line: "-w /etc/nginx/nginx.conf -p wa -k nginx_conf\n-w /etc/nginx/conf.d/ -p wa -k nginx_conf\n-w /etc/nginx/default.d/ -p wa -k nginx_conf"
+    state: present
+
+
+
+

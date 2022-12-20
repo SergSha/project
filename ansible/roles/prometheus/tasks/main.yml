@@ -1,2 +1,30 @@
 ---
 # tasks file for prometheus
+
+#- name: Gather variables for each operating system
+#  include_vars: "{{ item }}"
+#  with_first_found:
+#    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yml"
+#    - "{{ ansible_distribution | lower }}.yml"
+#    - "{{ ansible_os_family | lower }}-{{ ansible_distribution_major_version | lower }}.yml"
+#    - "{{ ansible_os_family | lower }}.yml"
+
+#- include: preflight.yml
+
+- name: Put SELinux in permissive mode, logging actions that would be blocked.
+  selinux:
+    policy: targeted
+    state: permissive
+
+- name: Include install prometheus
+  include_tasks: prometheus.yml
+  when: "'prometheus' in ansible_hostname"
+
+- name: Include install grafana
+  include_tasks: grafana.yml
+  when: "'prometheus' in ansible_hostname"
+
+- name: Include install node_exporter
+  include_tasks: node_exporter.yml
+  when: '"prometheus" in ansible_hostname'
+  when: "'servers' in group_names"

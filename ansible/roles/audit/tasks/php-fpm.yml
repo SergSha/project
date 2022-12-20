@@ -1,0 +1,14 @@
+---
+# tasks file for audit
+
+# Добавим правило, которое будет отслеживать изменения в конфигруации php-fpm
+- name: Add rules for tracking php-fpm config
+  lineinfile: 
+    path: /etc/audit/rules.d/audit.rules
+    insertafter: EOF
+    line: "-w /etc/php-fpm.conf -p wa -k php_conf\n-w /etc/php-fpm.d/ -p wa -k php_conf"
+    state: present
+
+
+
+

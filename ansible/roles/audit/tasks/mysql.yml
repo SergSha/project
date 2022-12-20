@@ -1,0 +1,14 @@
+---
+# tasks file for audit
+
+# Добавим правило, которое будет отслеживать изменения в конфигруации mysql
+- name: Add rules for tracking mysql config
+  lineinfile: 
+    path: /etc/audit/rules.d/audit.rules
+    insertafter: EOF
+    line: "-w /etc/my.cnf -p wa -k mysql_conf\n-w /etc/my.cnf.d/ -p wa -k mysql_conf"
+    state: present
+
+
+
+

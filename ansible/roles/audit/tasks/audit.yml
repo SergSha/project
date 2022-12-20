@@ -1,0 +1,11 @@
+---
+# tasks file for audit
+
+# Отроем порт TCP 60, для этого уберем значки комментария в файле /etc/audit/auditd.conf
+- name: Edit Audit config file /etc/audit/auditd.conf
+  replace: 
+    path: /etc/audit/auditd.conf
+    regexp: '^#(.*tcp_listen_port\ =\ 60.*)$'
+    replace: '\1'
+
+

@@ -7,26 +7,18 @@
     name: audispd-plugins
     state: present
 
-# Добавим правило, которое будет отслеживать изменения в конфигруации nginx
-- name: Add rules for tracking nginx config
-  lineinfile: 
-    dest: /etc/audit/rules.d/audit.rules
-    insertafter: EOF
-    line: "-w /etc/nginx/nginx.conf -p wa -k nginx_conf\n-w /etc/nginx/default.d/ -p wa -k nginx_conf"
-    state: present
-
 # Найдем и поменяем следующие строки в файле /etc/audit/auditd.conf    
 - name: Edit Audit config file /etc/audit/auditd.conf
   lineinfile: 
     path: /etc/audit/auditd.conf
-    regexp: '^(.*)log_format(.*)$'
+    regexp: '^(.*log_format.*)$'
     line: 'log_format = RAW'
     backrefs: yes
 
 - name: Edit Audit config file /etc/audit/auditd.conf
   lineinfile: 
     path: /etc/audit/auditd.conf
-    regexp: '^(.*)name_format(.*)$'
+    regexp: '^(.*name_format.*)$'
     line: 'name_format = HOSTNAME'
     backrefs: yes
 
@@ -34,7 +26,7 @@
 - name: Edit Audit-plugins config file /etc/audisp/plugins.d/au-remote.conf
   lineinfile: 
     path: /etc/audisp/plugins.d/au-remote.conf
-    regexp: '^(.*)active = no(.*)$'
+    regexp: '^(.*active = no.*)$'
     line: 'active = yes'
     backrefs: yes
       
@@ -42,12 +34,27 @@
 - name: Edit Audit-remote config file /etc/audisp/audisp-remote.conf
   lineinfile: 
     path: /etc/audisp/audisp-remote.conf
-    regexp: '^(.*)remote_server(.*)$'
-    line: 'remote_server = 192.168.50.15'
+    regexp: '^(.*remote_server.*)$'
+    line: 'remote_server = {{ logger_ip }}'
     backrefs: yes
-  notify: Auditd Restart
 
 - name: Include audit server tasks
   include_tasks: audit.yml
   when: "'logger' in ansible_hostname"
+
+- name: Include audit for nginx service
+  include_tasks: nginx.yml
+  when: "'routers' in group_names"
+
+- name: Include audit for php-fpm service
+  include_tasks: php-fpm.yml
+  when: "'webs' in group_names"
+
+- name: Include audit for mysql service
+  include_tasks: mysql.yml
+  when: "'mysql' in group_names"
+
+- name: Auditd restart
+  command: /sbin/service auditd restart
+
 
