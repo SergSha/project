@@ -42,14 +42,14 @@
   roles:
     - { role: rsyslog, when: ansible_system == 'Linux' }
 
-#- name: Configure audit
-#  hosts: all
-#  become: true
-#  roles:
-#    - { role: audit, when: ansible_system == 'Linux' }
+- name: Configure audit
+  hosts: all
+  become: true
+  roles:
+    - { role: audit, when: ansible_system == 'Linux' }
 
 - name: Install prometheus
-  hosts: monitor
+  hosts: all
   become: true
   roles:
     - { role: prometheus, when: ansible_system == 'Linux' }
