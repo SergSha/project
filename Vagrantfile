@@ -50,6 +50,14 @@ MACHINES = {
       {ip: '192.168.1.16', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "privnet"},
       {ip: '192.168.200.16', adapter: 8},
     ]
+  },
+  :monitor => {
+    :box_name => "centos/7",
+#    :vm_name => "monitor",
+    :net => [
+      {ip: '192.168.1.17', adapter: 2, netmask: "255.255.255.0", virtualbox__intnet: "privnet"},
+      {ip: '192.168.200.17', adapter: 8},
+    ]
   }
 }
 Vagrant.configure("2") do |config|
@@ -69,8 +77,8 @@ Vagrant.configure("2") do |config|
 #        sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 #        systemctl restart sshd
       SHELL
-#      if boxconfig[:vm_name] == "logger"
-      if boxname.to_s == "logger"
+#      if boxconfig[:vm_name] == "monitor"
+      if boxname.to_s == "monitor"
         box.vm.provision "ansible" do |ansible|
           ansible.playbook = "ansible/playbook.yml"
           ansible.inventory_path = "ansible/hosts"

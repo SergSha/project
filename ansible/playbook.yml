@@ -48,6 +48,12 @@
 #  roles:
 #    - { role: audit, when: ansible_system == 'Linux' }
 
+- name: Install prometheus
+  hosts: monitor
+  become: true
+  roles:
+    - { role: prometheus, when: ansible_system == 'Linux' }
+
 #- name: Install nfs
 #  hosts: web data
 #  become: true
