@@ -1,13 +1,13 @@
 ---
 # tasks file for prometheus
 
-- name: Node_exporter | create node_exporter system group
+- name: all hosts | create node_exporter system group
   group:
     name: node_exporter
     system: true
     state: present
 
-- name: Node_exporter | create node_exporter system user
+- name: all hosts | create node_exporter system user
   user:
     name: node_exporter
     system: true
@@ -16,7 +16,7 @@
     createhome: false
 #    home: "{{ node_exporter_db_dir }}"
 
-- name: Node_exporter | download node_exporter binary to local folder
+- name: all hosts | download node_exporter binary to local folder
   become: false
   get_url:
     url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-{{ go_arch }}.tar.gz"
@@ -30,7 +30,7 @@
   delegate_to: localhost
   check_mode: false
 
-- name: Node_exporter | unpack node_exporter binaries
+- name: all hosts | unpack node_exporter binaries
   become: false
   unarchive:
     src: "/tmp/node_exporter-{{ node_exporter_version }}.linux-{{ go_arch }}.tar.gz"
@@ -39,7 +39,7 @@
   delegate_to: localhost
   check_mode: false
 
-- name: Node_exporter | propagate official node_exporter binaries
+- name: all hosts | propagate official node_exporter binaries
   copy:
     src: "/tmp/node_exporter-{{ node_exporter_version }}.linux-{{ go_arch }}/{{ item }}"
     dest: "/usr/local/bin/"
@@ -49,7 +49,7 @@
   loop:
     - node_exporter
 
-- name: Node_exporter | create node_exporter systemd service unit
+- name: all hosts | create node_exporter systemd service unit
   template:
     src: node_exporter.service.j2
     dest: /etc/systemd/system/node_exporter.service
@@ -57,15 +57,12 @@
     group: root
     mode: 0644
 
-- name: Node_exporter | ensure node_exporter service is started and enabled
+- name: all hosts | ensure node_exporter service is started and enabled
   systemd:
     daemon_reload: true
     name: node_exporter
     state: restarted
     enabled: true
-
-
-
 
 # - name: Install SELinux dependencies
   # package:

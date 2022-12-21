@@ -1,12 +1,12 @@
 ---
 # tasks file for prometheus
 
-- name: Grafana | install grafana package
+- name: monitor | install grafana package
   yum:
     name: "https://dl.grafana.com/oss/release/grafana-{{ grafana_version }}.{{ grafana_arch }}.rpm"
     state: present
 
-- name: Grafana | ensure grafana service is started and enabled
+- name: monitor | ensure grafana service is started and enabled
   systemd:
     daemon_reload: true
     name: grafana-server

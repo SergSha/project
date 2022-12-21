@@ -1,13 +1,13 @@
 ---
 # tasks file for prometheus
 
-- name: Prometheus | create prometheus system group
+- name: monitor | create prometheus system group
   group:
     name: prometheus
     system: true
     state: present
 
-- name: Prometheus | create prometheus system user
+- name: monitor | create prometheus system user
   user:
     name: prometheus
     system: true
@@ -16,7 +16,7 @@
     createhome: false
     home: "{{ prometheus_db_dir }}"
 
-- name: Prometheus | create prometheus data directory
+- name: monitor | create prometheus data directory
   file:
     path: "{{ prometheus_db_dir }}"
     state: directory
@@ -24,7 +24,7 @@
     group: prometheus
     mode: 0755
 
-- name: Prometheus | create prometheus configuration directories
+- name: monitor | create prometheus configuration directories
   file:
     path: "{{ prometheus_config_dir }}"
     state: directory
@@ -33,12 +33,12 @@
     mode: 0770
 
 - block:
-  - name: Prometheus | "Get checksum list"
+  - name: monitor | "Get checksum list"
     set_fact:
       __prometheus_checksums: "{{ lookup('url', 'https://github.com/prometheus/prometheus/releases/download/v' + prometheus_version + '/sha256sums.txt', wantlist=True) | list }}"
     run_once: true
 
-  - name: Prometheus | "Get checksum for {{ go_arch }} architecture"
+  - name: monitor | "Get checksum for {{ go_arch }} architecture"
     set_fact:
       __prometheus_checksum: "{{ item.split(' ')[0] }}"
     loop: "{{ __prometheus_checksums }}"
@@ -50,7 +50,7 @@
     - not prometheus_skip_install
 
 - block:
-    - name: Prometheus | download prometheus binary to local folder
+    - name: monitor | download prometheus binary to local folder
       become: false
       get_url:
         url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-{{ go_arch }}.tar.gz"
@@ -64,7 +64,7 @@
       delegate_to: localhost
       check_mode: false
 
-    - name: Prometheus | unpack prometheus binaries
+    - name: monitor | unpack prometheus binaries
       become: false
       unarchive:
         src: "/tmp/prometheus-{{ prometheus_version }}.linux-{{ go_arch }}.tar.gz"
@@ -73,7 +73,7 @@
       delegate_to: localhost
       check_mode: false
 
-    - name: Prometheus | propagate official prometheus and promtool binaries
+    - name: monitor | propagate official prometheus and promtool binaries
       copy:
         src: "/tmp/prometheus-{{ prometheus_version }}.linux-{{ go_arch }}/{{ item }}"
         dest: "{{ _prometheus_binary_install_dir }}/{{ item }}"
@@ -84,7 +84,7 @@
         - prometheus
         - promtool
 
-    - name: Prometheus | propagate official console templates
+    - name: monitor | propagate official console templates
       copy:
         src: "/tmp/prometheus-{{ prometheus_version }}.linux-{{ go_arch }}/{{ item }}/"
         dest: "{{ prometheus_config_dir }}/{{ item }}"
@@ -99,7 +99,7 @@
     - prometheus_binary_local_dir | length == 0
     - not prometheus_skip_install
 
-- name: Prometheus | propagate locally distributed prometheus and promtool binaries
+- name: monitor | propagate locally distributed prometheus and promtool binaries
   copy:
     src: "{{ prometheus_binary_local_dir }}/{{ item }}"
     dest: "{{ _prometheus_binary_install_dir }}/{{ item }}"
@@ -113,7 +113,7 @@
     - prometheus_binary_local_dir | length > 0
     - not prometheus_skip_install
 
-- name: Prometheus | create prometheus systemd service unit
+- name: monitor | create prometheus systemd service unit
   template:
     src: prometheus.service.j2
     dest: /etc/systemd/system/prometheus.service
@@ -121,21 +121,21 @@
     group: root
     mode: 0644
 
-- name: Prometheus | edit config file /etc/prometheus/prometheus.yml
+- name: monitor | edit config file /etc/prometheus/prometheus.yml
   lineinfile:
     path: /etc/prometheus/prometheus.yml
     insertafter: EOF
     line: "  - job_name: 'node_exporter_clients'\n    scrape_interval: 5s\n    static_configs:\n      - targets: ['{{ prometheus_ip }}:9100']"
     state: present
 
-- name: Prometheus | ensure prometheus service is started and enabled
+- name: monitor | ensure prometheus service is started and enabled
   systemd:
     daemon_reload: true
     name: prometheus
     state: restarted
     enabled: true
 
-#- name: Prometheus | Install SELinux dependencies
+#- name: monitor | Install SELinux dependencies
 #  package:
 #    name: "{{ item }}"
 #    state: present
@@ -148,7 +148,7 @@
 #    - ansible_version.full is version('2.4', '>=')
 #    - ansible_selinux.status == "enabled"
 
-#- name: Prometheus | Allow prometheus to bind to port in SELinux
+#- name: monitor | Allow prometheus to bind to port in SELinux
 #  seport:
 #    ports: "{{ prometheus_web_listen_address.split(':')[1] }}"
 #    proto: tcp
