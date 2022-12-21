@@ -1,6 +1,6 @@
 <?php 
 try {
-    $conn = new PDO("mysql:host={{ data_ip }};dbname=cars", "{{ mysql_php_user }}", "{{ mysql_php_password }}");
+    $conn = new PDO("mysql:host={{ ip_address[data] }};dbname=cars", "{{ mysql_php_user }}", "{{ mysql_php_password }}");
 }
 catch (PDOException $e) {
     die("Database error: " . $e->getMessage());

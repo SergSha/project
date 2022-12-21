@@ -1,10 +1,11 @@
 ---
 # group vars
 
-fw_ip: 192.168.1.11
-web_ip: 192.168.1.12
-data_ip: 192.168.1.13
-replica_ip: 192.168.1.14
-backup_ip: 192.168.1.15
-logger_ip: 192.168.1.16
-prometheus_ip: 192.168.1.17
+ip_address:
+  fw: 192.168.1.11
+  web: 192.168.1.12
+  data: 192.168.1.13
+  replica: 192.168.1.14
+  backup: 192.168.1.15
+  logger: 192.168.1.16
+  monitor: 192.168.1.17

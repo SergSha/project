@@ -19,7 +19,7 @@
 - name: Add exports config file
   lineinfile:
     path: /etc/exports
-    line: /var/lib/mysql 192.168.1.2(rw,sync,root_squash)
+    line: "/var/lib/mysql {{ ip_address[data] }}(rw,sync,root_squash)"
     create: yes
 
 - name: nfs share 

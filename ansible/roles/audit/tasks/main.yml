@@ -35,7 +35,7 @@
   lineinfile: 
     path: /etc/audisp/audisp-remote.conf
     regexp: '^(.*remote_server.*)$'
-    line: 'remote_server = {{ logger_ip }}'
+    line: 'remote_server = {{ ip_address[logger] }}'
     backrefs: yes
 
 - name: Include audit server tasks

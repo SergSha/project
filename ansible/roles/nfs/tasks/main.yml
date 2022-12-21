@@ -9,9 +9,9 @@
 
 - name: Include install nfs server
   include_tasks: nfss.yml
-  when: "'data' in ansible_hostname"
+  when: "'backup' in ansible_hostname"
 
 - name: Include install nfs client
   include_tasks: nfsc.yml
-  when: "'web' in ansible_hostname"
+  when: "'data' in ansible_hostname"
 

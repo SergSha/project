@@ -2,7 +2,7 @@
 # tasks file for mysql
 
 - name: backup | Export temp mysql dump 'replica.sql' for {{ ansible_hostname }} server
-  shell: mysqldump -h {{ replica_ip }} --all-databases --triggers --routines --master-data > /data/replica.sql
+  shell: mysqldump -h {{ ip_address[replica] }} --all-databases --triggers --routines --master-data > /data/replica.sql
   ignore_errors: yes
 
 - name: backup | Master reset
@@ -14,7 +14,7 @@
   ignore_errors: yes
 
 - name: backup | Connect mysql to replica server
-  command: mysql -e 'CHANGE MASTER TO MASTER_HOST="{{ replica_ip }}", MASTER_PORT={{ mysql_port }}, MASTER_USER="{{ mysql_repl_user }}", MASTER_PASSWORD="{{ mysql_repl_password }}", MASTER_AUTO_POSITION=1;'
+  command: mysql -e 'CHANGE MASTER TO MASTER_HOST="{{ ip_address[replica] }}", MASTER_PORT={{ mysql_port }}, MASTER_USER="{{ mysql_repl_user }}", MASTER_PASSWORD="{{ mysql_repl_password }}", MASTER_AUTO_POSITION=1;'
   ignore_errors: yes
 
 - name: backup | Start slave

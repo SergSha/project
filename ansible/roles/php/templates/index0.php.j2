@@ -11,7 +11,7 @@
 <p><i>PDO connect:</i></p>
 <?php
 try {
-    $conn = new PDO("mysql:host={{ replica_ip }};dbname=cars", "{{ mysql_php_user }}", "{{ mysql_php_password }}");
+    $conn = new PDO("mysql:host={{ ip_address[replica] }};dbname=cars", "{{ mysql_php_user }}", "{{ mysql_php_password }}");
     $sql = "SELECT * FROM new_cars";
     $result = $conn->query($sql);
     echo "<h3>List new cars</h3>";
@@ -49,7 +49,7 @@ catch (PDOException $e) {
 
 <p><i>mysqli - OOP style:</i></p>
 <?php
-$conn = new mysqli("{{ replica_ip }}", "{{ mysql_php_user }}", "{{ mysql_php_password }}", "cars");
+$conn = new mysqli("{{ ip_address[replica] }}", "{{ mysql_php_user }}", "{{ mysql_php_password }}", "cars");
 if($conn->connect_error){
     die("Errors: " . $conn->connect_error);
 }
@@ -100,7 +100,7 @@ $conn->close();
 
 <p><i>mysqli - procedural style:</i></p>
 <?php
-$conn = mysqli_connect("{{ replica_ip }}", "{{ mysql_php_user }}", "{{ mysql_php_password }}", "cars");
+$conn = mysqli_connect("{{ ip_address[replica] }}", "{{ mysql_php_user }}", "{{ mysql_php_password }}", "cars");
 if (!$conn) {
   die("Error: " . mysqli_connect_error());
 }

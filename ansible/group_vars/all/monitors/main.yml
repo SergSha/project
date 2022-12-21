@@ -2,9 +2,7 @@
 # group vars
 
 # Prometheus
-prometheus_ip: 192.168.50.10
 prometheus_version: 2.37.2
-go_arch: amd64
 
 prometheus_config_dir: /etc/prometheus
 prometheus_db_dir: /var/lib/prometheus

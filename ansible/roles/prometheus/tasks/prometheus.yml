@@ -125,8 +125,17 @@
   lineinfile:
     path: /etc/prometheus/prometheus.yml
     insertafter: EOF
-    line: "  - job_name: 'node_exporter_clients'\n    scrape_interval: 5s\n    static_configs:\n      - targets: ['{{ prometheus_ip }}:9100']"
+    line: "  - job_name: 'node_exporter_clients'\n    scrape_interval: 5s\n    static_configs:"
     state: present
+
+- name: monitor | edit config file /etc/prometheus/prometheus.yml
+  lineinfile:
+    path: /etc/prometheus/prometheus.yml
+    insertafter: EOF
+    line: "      - targets: ['{{ item }}:9100']"
+    state: present
+  loop:
+    - ip_address
 
 - name: monitor | ensure prometheus service is started and enabled
   systemd:
