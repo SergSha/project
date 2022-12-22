@@ -1,7 +1,7 @@
 # Balance server
 
 upstream backend {
-        server {{ ip_address[web] }}:9000 weight=2;
+        server {{ ip_address['web'] }}:9000 weight=2;
 #        server 192.168.1.2:9000;
 #        server 192.168.1.3:9000;
 }

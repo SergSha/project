@@ -7,7 +7,7 @@
     insertafter: "{{ item.afterline }}"
     line: "{{ item.line }}"
   loop:
-    - { afterline: "#*.* @@remote-host:514", line: "*.* @@{{ ip_address[logger] }}:514" }
+    - { afterline: "#*.* @@remote-host:514", line: "*.* @@{{ ip_address['logger'] }}:514" }
   when: "'logger' not in ansible_hostname"
 
 - name: Include nginx log tasks

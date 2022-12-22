@@ -132,10 +132,10 @@
   lineinfile:
     path: /etc/prometheus/prometheus.yml
     insertafter: EOF
-    line: "      - targets: ['{{ item }}:9100']"
+    line: "      - targets: ['{{ item.value }}:9100']"
     state: present
-  loop:
-    - {{ ip_address }}
+  with_dict:
+    - "{{ ip_address }}"
 
 - name: monitor | ensure prometheus service is started and enabled
   systemd:

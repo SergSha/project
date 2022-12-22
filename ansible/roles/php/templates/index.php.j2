@@ -11,7 +11,7 @@
 <?php
 // List of new and used cars
 try {
-    $conn = new PDO("mysql:host={{ ip_address[replica] }};dbname=cars", "{{ mysql_php_user }}", "{{ mysql_php_password }}");
+    $conn = new PDO("mysql:host={{ ip_address['replica'] }};dbname=cars", "{{ mysql_php_user }}", "{{ mysql_php_password }}");
     $tbs = "SHOW TABLES";
     $tbarray = $conn->query($tbs);
     while($tb = $tbarray->fetch()){
