@@ -135,7 +135,7 @@
     line: "      - targets: ['{{ item }}:9100']"
     state: present
   loop:
-    - ip_address
+    - {{ ip_address }}
 
 - name: monitor | ensure prometheus service is started and enabled
   systemd:
