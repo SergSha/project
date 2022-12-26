@@ -53,11 +53,11 @@
 #$IPT -t nat -X
 #$IPT -t mangle -X
 
-- name: fw | Delete the user-defined chain ALLOWLIST
-  iptables:
-    chain: ALLOWLIST
-    chain_management: true
-    state: absent
+#- name: fw | Delete the user-defined chain ALLOWLIST
+#  iptables:
+#    chain: ALLOWLIST
+#    chain_management: true
+#    state: absent
 
 # Разрешаем localhost и локалку
 #$IPT -A INPUT -i lo -j ACCEPT
@@ -80,7 +80,7 @@
 - name: fw | Allow looback and local innet for the OUTPUT chain
   iptables:
     table: filter
-    chain: "OUTPUT
+    chain: OUTPUT
     out_interface: "{{ item }}"
     jump: ACCEPT
   with_items: [ 'lo', 'eth0', 'eth1', 'eth2' ]
@@ -144,8 +144,8 @@
 - name: fw | Drop syn-flood packages
   iptables:
     chain: "{{ item }}"
-    protocol: tcp !
-    syn: match
+    protocol: tcp
+    syn: "negate"
     match: state
     ctstate: NEW
     jump: DROP
@@ -167,7 +167,8 @@
     comment: "{{ item.comment }}"
   with_items:
     - { port: 22, comment: "For SSH" }
-    - { port: "80, 443", comment: "For NGINX" }
+    - { port: 80, comment: "For NGINX" }
+    - { port: 443, comment: "For NGINX" }
     - { port: 9100, comment: "For Node_exporter" }
 
 # Запрещаем все, что не разрешено

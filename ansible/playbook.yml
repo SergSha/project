@@ -54,6 +54,12 @@
   roles:
     - { role: prometheus, when: ansible_system == 'Linux' }
 
+- name: Configure iptables
+  hosts: all
+  become: true
+  roles:
+    - { role: iptables, when: ansible_system == 'Linux' }
+
 #- name: Install nfs
 #  hosts: web data
 #  become: true
