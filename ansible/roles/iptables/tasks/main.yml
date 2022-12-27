@@ -12,8 +12,17 @@
     - tcpdump
     state: present
 
-- name: All servers | delete default routes
-  command: ip route del default
+- name: All servers
+  block:
+  - name: All servers | disable default route
+    lineinfile:
+      path: /etc/sysconfig/network-scripts/ifcfg-eth0
+      line: DEFROUTE=no
+
+  - name: All servers | add default gateway
+    lineinfile:
+      path: /etc/sysconfig/network-scripts/ifcfg-eth1
+      line: "GATEWAY={{ ip_address['fw'] }}"
   when: "'routers' not in group_names"
 
 - name: All servers | network restart
