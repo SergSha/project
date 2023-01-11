@@ -1,0 +1,62 @@
+fw:
+[root@fw ~]# audit2why < /var/log/audit/audit.log 
+[root@fw ~]#
+
+
+
+web:
+[root@web ~]# audit2why < /var/log/audit/audit.log 
+node=web type=AVC msg=audit(1672994772.655:36): avc:  denied  { append } for  pid=736 comm="php-fpm" name="syslog" dev="sda1" ino=67630745 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:usr_t:s0 tclass=file permissive=1
+
+	Was caused by:
+		Missing type enforcement (TE) allow rule.
+
+		You can use audit2allow to generate a loadable module to allow this access.
+
+node=web type=AVC msg=audit(1672994867.474:70): avc:  denied  { name_connect } for  pid=769 comm="php-fpm" dest=3306 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:mysqld_port_t:s0 tclass=tcp_socket permissive=1
+
+	Was caused by:
+	One of the following booleans was set incorrectly.
+	Description:
+	Allow httpd to can network connect
+
+	Allow access by executing:
+	# setsebool -P httpd_can_network_connect 1
+	Description:
+	Allow httpd to can network connect db
+
+	Allow access by executing:
+	# setsebool -P httpd_can_network_connect_db 1
+[root@web ~]#
+
+
+
+data:
+[root@data ~]# audit2why < /var/log/audit/audit.log 
+[root@data ~]#
+
+
+
+replica:
+[root@replica ~]# audit2why < /var/log/audit/audit.log 
+[root@replica ~]#
+
+
+
+backup:
+[root@backup ~]# audit2why < /var/log/audit/audit.log 
+[root@backup ~]#
+
+
+
+logger:
+[root@logger ~]# audit2why < /var/log/audit/audit.log 
+[root@logger ~]#
+
+
+
+monitor:
+[root@monitor ~]# audit2why < /var/log/audit/audit.log 
+[root@monitor ~]#
+
+

@@ -66,4 +66,11 @@
 #  roles:
 #    - { role: nfs, when: ansible_system == 'Linux' }
 
+- name: All hosts | Reboot host
+  hosts: all
+  become: true
+  tasks:
+  - name: Reboot all hosts
+    reboot:
+
 

@@ -99,6 +99,14 @@
     jump: ACCEPT
   with_items: [ 'echo-reply', 'destination-unreachable', 'time-exceeded', 'echo-request' ]
 
+- name: fw | Allow ping
+  iptables:
+    chain: FORWARD
+    protocol: icmp
+    icmp_type: "{{ item }}"
+    jump: ACCEPT
+  with_items: [ 'echo-reply', 'destination-unreachable', 'time-exceeded', 'echo-request' ]
+
 # разрешаем установленные подключения
 #$IPT -A INPUT -p all -m state --state ESTABLISHED,RELATED -j ACCEPT
 #$IPT -A OUTPUT -p all -m state --state ESTABLISHED,RELATED -j ACCEPT
@@ -157,7 +165,7 @@
 #$IPT -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT -m comment --comment "For_nginx"
 #$IPT -A INPUT -p tcp -m tcp --dport 9100 -j ACCEPT -m comment --comment "For_Node_exporter"
 
-- name: fw | Allow for ssh, nginx, node_exporter
+- name: fw | Allow for ssh, nginx, grafana, node_exporter
   iptables:
     chain: INPUT
     protocol: tcp
@@ -169,6 +177,7 @@
     - { port: 22, comment: "For SSH" }
     - { port: 80, comment: "For NGINX" }
     - { port: 443, comment: "For NGINX" }
+    - { port: 3000, comment: "For Grafana" }
     - { port: 9100, comment: "For Node_exporter" }
 
 # Запрещаем все, что не разрешено
