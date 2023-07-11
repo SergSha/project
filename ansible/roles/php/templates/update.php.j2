@@ -5,15 +5,6 @@ try {
 catch (PDOException $e) {
     die("Database error: " . $e->getMessage());
 }
-?>
-<!DOCTYPE html>
-<html>
-<head>
-<title>Update car</title>
-<meta charset="utf-8" />
-</head>
-<body>
-<?php
 // если запрос GET
 if($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["tb"]) && isset($_GET["id"]))
 {
@@ -31,7 +22,14 @@ if($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["tb"]) && isset($_GET["id
             $year = $row["year"];
             $price = $row["price"];
         }
-        echo "<h3>Update car data</h3>
+        echo "<!DOCTYPE html>
+            <html>
+            <head>
+                <title>Update car</title>
+                <meta charset=\"utf-8\" />
+            </head>
+            <body>
+                <h3>Update car data</h3>
                 <form method='post'>
                     <input type='hidden' name='tb' value='$tb' />
                     <input type='hidden' name='id' value='$id' />
@@ -42,7 +40,9 @@ if($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["tb"]) && isset($_GET["id
                     <p>Price:
                     <input type='number' name='price' value='$price' /></p>
                     <input type='submit' value='Save' />
-            </form>";
+                </form>
+            </body>
+            </html>";
     }
     else{
         echo "Object not found";
@@ -66,5 +66,3 @@ else{
     echo "Uncorrect data";
 }
 ?>
-</body>
-</html>
